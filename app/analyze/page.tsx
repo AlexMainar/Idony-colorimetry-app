@@ -37,6 +37,16 @@ export default function AnalyzePage() {
 
   const [showForm, setShowForm] = useState(false);
 
+  useEffect(() => {
+  // Allow ?forceLead=1 to always show the form
+  if (typeof window !== 'undefined') {
+    const u = new URL(window.location.href);
+    if (u.searchParams.get('forceLead') === '1') {
+      localStorage.removeItem('idony_email');
+      setShowForm(true);
+    }
+  }
+}, []);
   // called when the user clicks “Iniciar colorimetría”
   const handleStart = () => {
     const saved = localStorage.getItem('idony_email');
@@ -53,6 +63,7 @@ export default function AnalyzePage() {
 
    // Clean up camera when leaving page
   useEffect(() => {
+     console.log('🧱 AnalyzePage mounted');
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
