@@ -1,14 +1,17 @@
 import { converter } from "culori";
 import colorimetry from "@/lib/mapping/colorimetry.json";
+
 const toOklab = converter("oklab");
 
-
-function clamp (v:number) {
-  return Math.max(0,Math.min(255,v));
+function clamp(v: number) {
+  return Math.max(0, Math.min(255, v));
 }
 
 export function averageRgb(pixels: Uint8ClampedArray): [number, number, number] {
-  let r = 0, g = 0, b = 0, n = 0;
+  let r = 0,
+    g = 0,
+    b = 0,
+    n = 0;
   for (let i = 0; i < pixels.length; i += 4) {
     r += pixels[i];
     g += pixels[i + 1];
@@ -17,13 +20,7 @@ export function averageRgb(pixels: Uint8ClampedArray): [number, number, number] 
   }
 
   const avg: [number, number, number] = [r / n, g / n, b / n];
-
-  // ✅ Clamp to 0–255
-  return [
-    clamp(avg[0]),
-    clamp(avg[1]),
-    clamp(avg[2]),
-  ];
+  return [clamp(avg[0]), clamp(avg[1]), clamp(avg[2])];
 }
 
 /**
@@ -32,11 +29,18 @@ export function averageRgb(pixels: Uint8ClampedArray): [number, number, number] 
 export function classifyCategoryFromSkinRGB(
   [r, g, b]: [number, number, number]
 ):
-  | "Primavera Brillante" | "Primavera Cálida" | "Primavera Clara"
-  | "Invierno Brillante" | "Invierno Frío" | "Invierno Profundo"
-  | "Verano Claro" | "Verano Frío" | "Verano Suave"
-  | "Otoño Suave" | "Otoño Cálido" | "Otoño Profundo" {
-  
+  | "Primavera Brillante"
+  | "Primavera Cálida"
+  | "Primavera Clara"
+  | "Invierno Brillante"
+  | "Invierno Frío"
+  | "Invierno Profundo"
+  | "Verano Claro"
+  | "Verano Frío"
+  | "Verano Suave"
+  | "Otoño Suave"
+  | "Otoño Cálido"
+  | "Otoño Profundo" {
   const lab = toOklab({
     mode: "rgb",
     r: r / 255,
@@ -44,15 +48,15 @@ export function classifyCategoryFromSkinRGB(
     b: b / 255,
   }) as any;
 
-  const L = lab.L;       // lightness (0–1)
-  const a = lab.a;       // green ↔ red (warmth)
-  const b_ = lab.b;      // blue ↔ yellow (undertone axis)
-  const chroma = Math.sqrt(a * a + b_ * b_); 
+  const L = lab.L; // lightness
+  const a = lab.a; // green ↔ red
+  const b_ = lab.b; // blue ↔ yellow
+  const chroma = Math.sqrt(a * a + b_ * b_);
 
   // --- Adjusted thresholds ---
-  const NEUTRAL_BAND = 0.04; // narrower neutral zone
-  const WARM_BIAS = b_ > 0.05;  // yellowish undertone
-  const COOL_BIAS = b_ < -0.05; // bluish undertone
+  const NEUTRAL_BAND = 0.04;
+  const WARM_BIAS = b_ > 0.05;
+  const COOL_BIAS = b_ < -0.05;
 
   let warmthCategory: "warm" | "cool" | "neutral";
   if (a > NEUTRAL_BAND || WARM_BIAS) warmthCategory = "warm";
@@ -74,7 +78,7 @@ export function classifyCategoryFromSkinRGB(
     if (L <= 0.65 && chroma <= 0.13) return "Invierno Profundo";
   }
 
-  // Neutral zone fallback: default to softer seasons
+  // Neutral fallback
   if (L > 0.65) return "Verano Suave";
   return "Otoño Suave";
 }
@@ -145,30 +149,23 @@ export function familiaFinal(catPiel: string, ojos: ColorOjos, cabello: ColorCab
 }
 
 export function refinarCategoria(catPiel: string, ojos: ColorOjos, cabello: ColorCabello): string {
-  const fam = familiaDesdeCategoria(catPiel); // Warm vs Cool base
+  const fam = familiaDesdeCategoria(catPiel);
   console.log("Base family from skin:", fam);
 
-  // Eyes: decide Light vs Deep
+  // Eyes → depth
   let depth: "Light" | "Deep" | "Soft" = "Soft";
-  if (["azules", "grises", "verdes"].includes(ojos)) {
-    depth = "Light";
-  } else if (["marrones", "negros"].includes(ojos)) {
-    depth = "Deep";
-  } else if (ojos === "avellana") {
-    depth = "Soft";
-  }
+  if (["azules", "grises", "verdes"].includes(ojos)) depth = "Light";
+  else if (["marrones", "negros"].includes(ojos)) depth = "Deep";
+  else if (ojos === "avellana") depth = "Soft";
   console.log("Depth from eyes:", ojos, "=>", depth);
 
-  // Hair: decide Bright vs Soft
+  // Hair → chroma
   let chroma: "Bright" | "Soft" = "Soft";
-  if (["rubio", "dorado", "rojo"].includes(cabello)) {
-    chroma = "Bright";
-  } else if (["rubio-ceniza", "castaño", "negro"].includes(cabello)) {
-    chroma = "Soft";
-  }
+  if (["rubio", "dorado", "rojo"].includes(cabello)) chroma = "Bright";
+  else if (["rubio-ceniza", "castaño", "negro"].includes(cabello)) chroma = "Soft";
   console.log("Chroma from hair:", cabello, "=>", chroma);
 
-  // Now map fam + depth + chroma → subtype
+  // Map fam + depth + chroma
   let result: string;
   switch (fam) {
     case "Primavera":
@@ -176,27 +173,23 @@ export function refinarCategoria(catPiel: string, ojos: ColorOjos, cabello: Colo
       else if (chroma === "Bright") result = "Primavera Brillante";
       else result = "Primavera Cálida";
       break;
-
     case "Verano":
       if (depth === "Light") result = "Verano Claro";
       else if (chroma === "Soft") result = "Verano Suave";
       else result = "Verano Frío";
       break;
-
     case "Otoño":
       if (depth === "Deep") result = "Otoño Profundo";
       else if (chroma === "Soft") result = "Otoño Suave";
       else result = "Otoño Cálido";
       break;
-
     case "Invierno":
       if (depth === "Deep") result = "Invierno Profundo";
       else if (chroma === "Bright") result = "Invierno Brillante";
       else result = "Invierno Frío";
       break;
-
     default:
-      result = "Verano Frío"; // fallback
+      result = "Verano Frío";
   }
 
   console.log("Final refined category:", result);

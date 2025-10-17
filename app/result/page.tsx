@@ -1,168 +1,162 @@
-// app/result/page.tsx
 "use client";
 
+import { useEffect, useState } from "react";
 import { useAppStore } from "@/lib/store";
-import Link from "next/link";
 import colorimetry from "@/lib/mapping/colorimetry.json";
 import { paletteForSeason } from "@/lib/color";
-import { motion } from "framer-motion";
+import { fetchShopifyProducts, ShopifyProduct } from "@/lib/shopify";
+declare global {
+  interface Window {
+    localStream?: MediaStream;
+  }
+}
+const DISCOUNT_CODE = process.env.NEXT_PUBLIC_DISCOUNT_CODE || "PALETTE15";
 
 export default function ResultPage() {
   const palette = useAppStore((s) => s.palette);
+  const [products, setProducts] = useState<ShopifyProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const category = palette?.season;
+  const info = category ? (colorimetry as any)[category] : null;
+
+  useEffect(() => {
+    if (palette && typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'ViewContent', {
+        content_name: palette.season,
+        content_category: 'Colorimetry Result',
+      });
+    }
+  }, [palette]);
 
   if (!palette) {
     return (
-      <main className="min-h-dvh flex flex-col items-center justify-center text-center bg-white text-neutral-800">
-        <div>
-          <p className="mb-4 text-lg">Aún no has realizado tu análisis.</p>
-          <Link
-            href="/analyze"
-            className="inline-block rounded-xl border border-neutral-300 px-6 py-3 text-sm font-medium hover:bg-neutral-100 transition"
-          >
-            Realizar análisis
-          </Link>
-        </div>
+      <main className="min-h-dvh bg-white text-black flex flex-col items-center px-6 pt-8 pb-16 space-y-6">
+        <p className="text-lg text-black">NO SE ENCONTRÓ ANÁLISIS</p>
       </main>
     );
   }
 
-  const category = palette.season;
-  const info = (colorimetry as any)[category];
+  // Stop camera stream when entering result page
+  useEffect(() => {
+    if (window.localStream) {
+      window.localStream.getTracks().forEach((track) => track.stop());
+      console.log("📷 Camera stopped");
+      window.localStream = undefined;
+    }
+  }, []);
 
-  if (!info) {
+  useEffect(() => {
+    async function load() {
+      if (!info?.recommended_products) return;
+      const ids = info.recommended_products.map((p: any) => p.id);
+      const shopifyData = await fetchShopifyProducts(ids);
+      setProducts(shopifyData);
+      setLoading(false);
+    }
+    load();
+  }, [category]);
+
+  if (!info)
     return (
-      <main className="min-h-dvh flex flex-col items-center justify-center text-center bg-white text-neutral-800">
-        <div>
-          <p className="mb-4 text-lg">
-            No hay datos disponibles para la categoría:{" "}
-            <span className="font-semibold">{category}</span>
-          </p>
-          <Link
-            href="/analyze"
-            className="inline-block rounded-xl border border-neutral-300 px-6 py-3 text-sm font-medium hover:bg-neutral-100 transition"
-          >
-            Volver a analizar
-          </Link>
-        </div>
+      <main className="min-h-dvh grid place-items-center text-black">
+        <p>No data for category: {category}</p>
       </main>
     );
-  }
+
+  const cartUrl = `https://www.idonycosmetics.com/cart/${products
+    .map(p => `${p.variantId?.split("/").pop()}:1`)
+    .join(",")}`;
 
   return (
-    <main className="min-h-dvh flex flex-col bg-white text-neutral-800">
+    <main className="min-h-dvh flex flex-col items-center bg-white text-black px-6 py-4 overflow-y-auto">
       {/* Header */}
-      <header className="w-full flex justify-start px-6 py-4">
+      <header className="relative w-full flex items-center justify-center px-6 py-3">
         <img
           src="/Logos-01.svg"
           alt="Idony logo"
-          className="w-40 h-auto opacity-90"
+          className="absolute left-6 top-1/2 -translate-y-1/2 w-36 h-auto"
         />
+        <h1 className="text-2xl font-black uppercase tracking-tight text-center">{category}</h1>
       </header>
 
-      {/* Main content */}
-      <section className="flex flex-col items-center px-6 pb-16 text-center space-y-8 animate-fadeIn">
+      {/* Main Content */}
+      <div className="max-w-5xl w-full text-center text-black space-y-2 leading-tight mt-4">
+        <p className="text-base text-black mx-auto max-w-4xl">{info.description}</p>
+        <p className="text-base text-black mx-auto max-w-4xl">{info.comments}</p>
+
         <div>
-          <h2 className="text-sm uppercase tracking-widest text-neutral-500">
-            Tu análisis de colorimetría
+          <h2 className="font-black text-base uppercase mb-1 tracking-tight">Tonos recomendados</h2>
+          <p className="text-base">{info.recommended_colors}</p>
+        </div>
+
+        <div>
+          <h2 className="font-black text-base uppercase mb-1 tracking-tight">Colores a evitar</h2>
+          <p className="text-base">{info.avoid_colors}</p>
+        </div>
+
+
+
+        {/* Color palette */}
+        {category && (
+          <div>
+            <h2 className="font-black text-base uppercase mb-1 tracking-tight">
+              Paleta de colores
+            </h2>
+            <div className="flex justify-center gap-2 mt-2">
+              {paletteForSeason(category).map((hex: string) => (
+                <div
+                  key={hex}
+                  className="w-18 h-18 rounded-none border border-neutral-300"
+                  style={{ backgroundColor: hex }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Products */}
+        <div>
+          <h2 className="font-black text-base uppercase mb-2 tracking-tight">
+            Productos Idony recomendados
           </h2>
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-4xl font-black mt-2 text-[#D94E37]"
-          >
-            {category}
-          </motion.h1>
-        </div>
-
-        <motion.p
-          className="max-w-md text-neutral-600 leading-relaxed"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          {info.description}
-        </motion.p>
-
-        {/* Swatches */}
-        <motion.div
-          className="grid grid-cols-5 gap-2 mt-4"
-          initial="hidden"
-          animate="visible"
-          variants={{
-            hidden: { opacity: 0, y: 20 },
-            visible: {
-              opacity: 1,
-              y: 0,
-              transition: { delayChildren: 0.3, staggerChildren: 0.1 },
-            },
-          }}
-        >
-          {paletteForSeason(category).map((hex: string) => (
-            <motion.div
-              key={hex}
-              variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-              className="aspect-square rounded-xl border shadow-sm"
-              style={{ backgroundColor: hex }}
-              title={hex}
-            />
-          ))}
-        </motion.div>
-
-        {/* Info sections */}
-        <div className="max-w-lg text-left space-y-6 mt-10">
-          <div>
-            <h3 className="font-semibold text-[#D94E37] mb-1">
-              Tonos recomendados
-            </h3>
-            <p className="text-neutral-700 text-sm leading-relaxed">
-              {info.recommended_colors}
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-[#D94E37] mb-1">
-              Colores a evitar
-            </h3>
-            <p className="text-neutral-700 text-sm leading-relaxed">
-              {info.avoid_colors}
-            </p>
-          </div>
-
-          <div>
-            <h3 className="font-semibold text-[#D94E37] mb-1">
-              Productos IDONY recomendados
-            </h3>
-              <ul className="space-y-1 text-sm text-neutral-700">
-                {info.recommended_products.map((p: any) => (
-                  <li key={p.id}>• {p.name}</li>
-                ))}
-              </ul>
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row gap-3 mt-10">
-          <Link
-          href="/analyze"
-          className="rounded-xl border border-neutral-300 px-6 py-3 text-sm font-medium hover:bg-neutral-100 transition">
-          Volver a analizar
-          </Link>
-
-          {info.recommended_products && info.recommended_products.length > 0 && (
-            <Link
-              href={`https://2f16be.myshopify.com/cart/${info.recommended_products
-                .map((p: any) => `${p.id}:1`)
-                .join(",")}?utm_source=colorimetry`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-xl bg-[#D94E37] text-white px-6 py-3 text-sm font-medium hover:opacity-90 transition"
-            >
-              Ver productos sugeridos
-            </Link>
+          {loading ? (
+            <p className="text-base text-black">Cargando productos...</p>
+          ) : (
+            <div className="flex flex-wrap justify-center items-start gap-0 mt-2">
+              {products.map((p) => (
+                <a
+                  key={`${p.variantId || p.id}-${p.handle}`}
+                  href={`https://idonycosmetics.com/products/${p.handle}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex flex-col items-center w-1/2 sm:w-1/4 px-1 hover:opacity-90 transition"
+                >
+                  <img
+                    src={p.featuredImage?.url || "/placeholder.png"}
+                    alt={p.title}
+                    className="h-52 w-auto object-contain m-0 p-0 align-top"
+                  />
+                  <p className="text-[11px] font-black mt-1 uppercase leading-tight text-center">
+                    {p.title}
+                  </p>
+                </a>
+              ))}
+            </div>
           )}
         </div>
-      </section>
+
+        {/* CTA */}
+        {products.length > 0 && (
+          <a
+            href={cartUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block mx-auto mt-4 bg-black text-white font-black rounded-none py-2 px-10 uppercase tracking-wide hover:bg-neutral-800 transition"
+          >
+            Los quiero
+          </a>
+        )}
+      </div>
     </main>
   );
 }

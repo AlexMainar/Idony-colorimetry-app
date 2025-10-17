@@ -1,334 +1,362 @@
 {
   "Primavera Brillante": {
     "description": "Piel clara cálida con ojos brillantes, contraste alto.",
-    "comments": "Tu piel pide luz y contraste. Aquí todo vibra: ojos chispeantes, tonos que despiertan energía y colores que no pasan desapercibidos.",
-    "recommended_colors": "Vivos, luminosos, saturados (corales, verdes esmeralda, rojos intensos)",
-    "avoid_colors": "Apagados, terrosos",
+    "comments": "Tu piel pide luz y contraste. Los colores vibrantes despiertan tu energía y resaltan el brillo natural de tus ojos.",
+    "recommended_colors": "Tonos luminosos, saturados y cálidos con subtono dorado: corales vivos, rojos amapola, verdes esmeralda, turquesas y amarillos sol radiante. Reflejan energía y vivacidad.",
+    "avoid_colors": "Tonos opacos o terrosos que apagan el brillo natural (beiges apagados, marrones fangosos, grises verdosos).",
     "recommended_products": [
       {
-        "name": "Lip Bloom Ruby Vice",
-        "id": "48645978620241"
+        "id": "003F0C3AA01",
+        "name": "Lip Bloom Oil & Tint Clover Club"
       },
       {
-        "name": "Lip Grace Mystique Girl",
-        "id": "48645996151121"
+        "id": "00384555701",
+        "name": "Lip Grace Mystique Girl"
       },
       {
-        "name": "Dream Paint Blush Ibiza",
-        "id": "48645963612497"
+        "id": "005AE446801",
+        "name": "Dream Paint Blush Ibiza"
       }
     ],
     "swatches": [
-      "\"#FF6F61\"",
-      "\"#FFA94D\"",
-      "\"#00B894\"",
-      "\"#74B9FF\"",
-      "\"#FFE066"
-    ]
+      "#FF6F61",
+      "#FFB347",
+      "#00B894",
+      "#40E0D0",
+      "#FFD54F"
+    ],
+    "palette_description": "coral intenso, melocotón dorado, verde esmeralda, turquesa, amarillo sol"
   },
   "Primavera Clara": {
     "description": "Piel clara cálida, cabello rubio dorado/avellana claro, ojos claros. Contraste bajo.",
-    "comments": "Delicadeza luminosa. Tu belleza respira frescura y necesita tonos suaves, claros y llenos de vida, como si el sol se reflejara en tu piel.",
-    "recommended_colors": "Claros, cálidos y luminosos (melocotón, coral suave, aqua)",
-    "avoid_colors": "Oscuros, fríos",
+    "comments": "Delicadeza luminosa. Tu belleza desprende frescura y se potencia con tonos suaves, cálidos y traslúcidos, como si el sol se reflejara en tu piel.",
+    "recommended_colors": "Tonos cálidos, claros y transparentes: melocotón suave, coral claro, verde agua, amarillo mantequilla, rosa albaricoque. Transmiten frescura y ligereza.",
+    "avoid_colors": "Tonos muy oscuros o fríos (rojos borgoña, negros, azul marino intenso).",
     "recommended_products": [
       {
-        "name": "Lip Bloom Clover Club",
-        "id": "48645978653009"
+        "id": "003F0C3AA01",
+        "name": "Lip Bloom Oil & Tint Clover Club"
       },
       {
-        "name": "Lip Grace Peach Cosmo",
-        "id": "48645998903633"
+        "id": "01AE645B01",
+        "name": "Lip Grace Creamy Matte Lipstick Peach Cosmo"
       },
       {
-        "name": "Dream Paint Blush Ibiza",
-        "id": "48645963612497"
+        "id": "005AE446801",
+        "name": "Dream Paint Blush Ibiza Satin"
       },
       {
-        "name": "Ethereal Luminizer Stardust",
-        "id": "48645959516497"
+        "id": "002B4786201",
+        "name": "Ethereal Luminizer Stick Highlighter Stardust"
       }
     ],
     "swatches": [
-      "#FFDAB9\"",
-      "\"#F7A8A4\"",
-      "\"#B5EAD7\"",
-      "\"#A8E6CF\"",
-      "\"#FFF5BA\""
-    ]
+      "#FFDAB9",
+      "#F7A8A4",
+      "#B5EAD7",
+      "#FFF5BA",
+      "#A8E6CF"
+    ],
+    "palette_description": "melocotón claro, rosa coral suave, verde agua, amarillo pastel, menta pálida"
   },
   "Primavera Cálida": {
     "description": "Piel cálida dorada, cabello dorado o cobrizo, ojos verdes/avellana. Contraste medio.",
-    "comments": "Radiante y dorada. Aquí reinan los tonos que huelen a verano eterno: cálidos, intensos y bañados por el sol mediterráneo.",
-    "recommended_colors": "Cálidos puros (naranjas, terracotas, dorados)",
-    "avoid_colors": "Fríos azulados",
+    "comments": "Radiante y dorada. Brillas con tonos bañados por el sol: naranjas suaves, terracotas y corales cálidos que parecen respirar verano.",
+    "recommended_colors": "Tonos dorados, cálidos y mediterráneos: naranjas vivos, terracotas soleados, dorado miel, verde oliva cálido, coral tostado.",
+    "avoid_colors": "Tonos fríos azulados que restan calidez.",
     "recommended_products": [
       {
-        "name": "Dream Paint Bronzer Sugar Cane",
-        "id": "48645969576273"
+        "id": "006FF6E7801",
+        "name": "Dream Paint Bronzer Sugar Cane"
       },
       {
-        "name": "Lip Bloom Barbados",
-        "id": "48645978587473"
+        "id": "003AF4B5501",
+        "name": "Lip Bloom Oil & Tint Barbados"
       },
       {
-        "name": "Lip Grace Kalahari",
-        "id": "48645996118353"
+        "id": "001B5494E01",
+        "name": "Lip Grace Creamy Matte Lipstick Kalahari"
       },
       {
-        "name": "Dream Paint Blush Ibiza",
-        "id": "48645963612497"
+        "id": "002B4786201",
+        "name": "Ethereal Luminizer Stick Highlighter Stardust"
       }
     ],
     "swatches": [
-      "\"#FF7F50\"",
-      "\"#E49B0F\"",
-      "\"#F4A460\"",
-      "\"#FFA07A\"",
-      "\"#CD853F\""
-    ]
+      "#FFA07A",
+      "#E49B0F",
+      "#D2691E",
+      "#CD853F",
+      "#FF7F50"
+    ],
+    "palette_description": "salmón cálido, dorado miel, terracota tostado, bronce suave, coral anaranjado"
   },
   "Verano Suave": {
     "description": "Piel fría con matiz rosado/oliva, cabello castaño medio ceniza, ojos verde-grisáceo. Contraste bajo.",
-    "comments": "Todo es sutil, calmado y armonioso. Tu piel y mirada brillan mejor con tonos apagados y delicados, como un filtro suave que realza sin estridencias.",
-    "recommended_colors": "Fríos suaves y apagados (rosa viejo, malva apagado, grisáceos)",
-    "avoid_colors": "Saturados, cálidos intensos",
+    "comments": "Todo en ti es equilibrio. Tu luz se revela en la sutileza: tonos fríos, empolvados y armoniosos que acarician sin imponerse.",
+    "recommended_colors": "Tonos fríos y apagados, con base gris perla o malva: rosa viejo, lavanda grisáceo, azul pizarra, verde salvia, malva empolvado. Elegancia discreta y etérea.",
+    "avoid_colors": "Tonos saturados o muy cálidos (naranjas, amarillos fuertes).",
     "recommended_products": [
       {
-        "name": "Flush & Bloom Temptation",
-        "id": "48645950996817"
+        "id": "004AF4C761",
+        "name": "Flush & Bloom Stick Temptation"
       },
       {
-        "name": "Lip Grace Twilight Zone",
-        "id": "48645996085585"
+        "id": "0019A495701",
+        "name": "Lip Grace Lipstick Twilight Zone"
       },
       {
-        "name": "Dream Paint Blush Chelsea (ligero)",
-        "id": "48645963579729"
+        "id": "006FF6E7801",
+        "name": "Dream Paint Bronzer Sugar Cane"
       }
     ],
     "swatches": [
-      "\"#778899\"",
-      "\"#708090\"",
-      "\"#BC8F8F\"",
-      "\"#C0C0C0\"",
-      "\"#6A5ACD\""
-    ]
+      "#C8A2C8",
+      "#B0C4DE",
+      "#C3B091",
+      "#B38B6D",
+      "#A3989D"
+    ],
+    "palette_description": "lila empolvado, azul humo, beige grisáceo, topo rosado, malva gris"
   },
   "Verano Claro": {
     "description": "Piel clara fría, cabello rubio ceniza, ojos claros. Contraste bajo.",
-    "comments": "Aire etéreo y cristalino. Tu piel se ilumina con tonos claros y fríos, como un amanecer fresco de verano.",
-    "recommended_colors": "Claros fríos y etéreos (lavanda, aqua, rosa empolvado)",
-    "avoid_colors": "Oscuros, cálidos intensos",
+    "comments": "Aire etéreo y cristalino. Tu piel se ilumina con tonos claros y fríos que reflejan serenidad: lavandas, rosas y azules helados.",
+    "recommended_colors": "Tonos fríos claros y luminosos con base azul: lavanda clara, rosa pétalo, agua helado, gris perla, azul cielo. Dan un efecto fresco y cristalino.",
+    "avoid_colors": "Tonos oscuros o intensos (negros, burdeos, marrones).",
     "recommended_products": [
       {
-        "name": "Lip Bloom Clover Club",
-        "id": "48645978653009"
+        "id": "004AF4C761",
+        "name": "Flush & Bloom Stick Blush"
       },
       {
-        "name": "Lip Grace Peach Cosmo",
-        "id": "48645998903633"
+        "id": "0019A495701",
+        "name": "Lip Grace Twilight Zone"
       },
       {
-        "name": "Ethereal Luminizer Stardust",
-        "id": "48645959516497"
+        "id": "002B4786201",
+        "name": "Ethereal Luminizer Stardust"
       }
     ],
     "swatches": [
-      "\"#B0E0E6\"",
-      "\"#E6E6FA\"",
-      "\"#FFF0F5\"",
-      "\"#AFEEEE\"",
-      "\"#F0E68C\""
-    ]
+      "#E6E6FA",
+      "#AFEEEE",
+      "#F8BBD0",
+      "#D1EAF0",
+      "#F0E68C"
+    ],
+    "palette_description": "lavanda suave, aqua pálido, rosa pétalo, azul hielo, vainilla fría"
   },
   "Verano Frío": {
     "description": "Piel fría neutra-rosada, cabello rubio ceniza/castaño, ojos azules o grises. Contraste medio.",
-    "comments": "Elegancia serena. Tu belleza pide colores fríos, limpios y sofisticados que dan equilibrio y un toque refinado sin esfuerzo.",
-    "recommended_colors": "Medios fríos (rosas, malvas, frambuesas)",
-    "avoid_colors": "Naranjas, dorados cálidos",
+    "comments": "Elegancia serena. Los tonos fríos y medios equilibran tu piel y tu mirada: rosas frambuesa, malvas y lilas que revelan tu calma interior y te aportan un toque refinado.",
+    "recommended_colors": "Tonos fríos y medios con subtono rosado o azulado: frambuesa, ciruela rosada, malva, azul denim claro, rosa cuarzo frío. Refinamiento y equilibrio.",
+    "avoid_colors": "Naranjas, dorados y cálidos intensos.",
     "recommended_products": [
       {
-        "name": "Lip Grace Twilight Zone",
-        "id": "48645996085585"
+        "id": "004AF4C761",
+        "name": "Flush & Bloom Stick Blush"
       },
       {
-        "name": "Dream Paint Blush Chelsea",
-        "id": "48645963579729"
+        "id": "001BF122001",
+        "name": "Lip Grace Mystique Girl"
       },
       {
-        "name": "Lip Bloom Ruby Vice",
-        "id": "48645978620241"
+        "id": "005D40A3901",
+        "name": "Dream Paint Blush Chelsea"
+      },
+      {
+        "id": "00384555701",
+        "name": "Lip Bloom Oil & Tint Ruby Vice"
       }
     ],
     "swatches": [
-      "\"#6495ED\"",
-      "\"#C71585\"",
-      "\"#9370DB\"",
-      "\"#4682B4\"",
-      "\"#B0C4DE\""
-    ]
+      "#C71585",
+      "#9370DB",
+      "#6A5ACD",
+      "#B0C4DE",
+      "#D8BFD8"
+    ],
+    "palette_description": "frambuesa, malva frío, lavanda profunda, azul polvo, rosa lila"
   },
   "Otoño Suave": {
     "description": "Piel cálida apagada, cabello castaño medio, ojos verdes/marrón suaves. Contraste bajo.",
-    "comments": "Cálida, tranquila, con una luz que pide tonos acogedores. Tu piel se enciende con colores apagados, suaves y envolventes.",
-    "recommended_colors": "Cálidos apagados (beige cálido, terracotas suaves, oliva)",
-    "avoid_colors": "Fríos brillantes",
+    "comments": "Cálida y envolvente. Tu belleza brilla con matices suaves, terrosos y naturales: beiges, oliva y cobre claro que te arropan y encienden tu rostro.",
+    "recommended_colors": "Tonos cálidos apagados y envolventes: beige arena, verde oliva suave, terracota mate, marrón miel, rosa melocotón apagado. Natural y acogedor.",
+    "avoid_colors": "Tonos fríos brillantes (fucsia, azul hielo, plata).",
     "recommended_products": [
       {
-        "name": "Lip Grace Kalahari",
-        "id": "48645996118353"
+        "id": "001B5494E01",
+        "name": "Lip Grace Lipstick Kalahari"
       },
       {
-        "name": "Lip Bloom Barbados",
-        "id": "48645978587473"
+        "id": "003AF4B5501",
+        "name": "Lip Bloom Oil & Tint Barbados"
       },
       {
-        "name": "Dream Paint Bronzer Sugar Cane",
-        "id": "48645969576273"
+        "id": "006FF6E7801",
+        "name": "Dream Paint Bronzer Sugar Cane"
+      },
+      {
+        "id": "002B4786201",
+        "name": "Ethereal Luminizer Stick Highlighter Stardust"
       }
     ],
     "swatches": [
-      "\"#C68642\"",
-      "\"#A0522D\"",
-      "\"#BC8F8F\"",
-      "\"#D2B48C\"",
-      "\"#8F9779\""
-    ]
+      "#C68642",
+      "#BC8F8F",
+      "#8F9779",
+      "#D2B48C",
+      "#B87333"
+    ],
+    "palette_description": "ámbar tostado, rosa té, verde oliva, beige cálido, cobre claro"
   },
   "Otoño Cálido": {
     "description": "Piel cálida dorada, cabello castaño/rojizo, ojos verdes cálidos o avellana.",
-    "comments": "Piel dorada y vibrante. Brillas con tonos ricos y especiados que evocan hojas secas, fuego lento y atardeceres cálidos.",
-    "recommended_colors": "Cálidos ricos (naranjas, mostazas, marrones dorados)",
-    "avoid_colors": "Fríos, pasteles claros",
+    "comments": "Piel dorada y vibrante. Te favorecen los tonos ricos y especiados que evocan atardeceres cálidos.",
+    "recommended_colors": "Tonos intensos y especiados: mostaza, calabaza, ámbar dorado, verde musgo, terracota rojiza. Inspirados en la luz de otoño.",
+    "avoid_colors": "Fríos o pasteles pálidos.",
     "recommended_products": [
       {
-        "name": "Dream Paint Blush Ibiza",
-        "id": "48645963612497"
+        "id": "003F0C3AA01",
+        "name": "Lip Bloom Oil & Tint Clover Club"
       },
       {
-        "name": "Lip Grace Kalahari",
-        "id": "48645996118353"
+        "id": "006FF6E7801",
+        "name": "Dream Paint Bronzer Sugar Cane"
       },
       {
-        "name": "Lip Bloom Barbados",
-        "id": "48645978587473"
+        "id": "002B4786201",
+        "name": "Ethereal Luminizer Stardust"
       }
     ],
     "swatches": [
-      "#A0522D",
-      "#CD7F32",
       "#FF8C00",
-      "#8B4513",
-      "#C04000"
-    ]
+      "#A0522D",
+      "#C04000",
+      "#CD7F32",
+      "#8B4513"
+    ],
+    "palette_description": "naranja quemado, marrón canela, óxido rojizo, bronce cálido, marrón tierra"
   },
   "Otoño Profundo": {
     "description": "Piel oliva o cálida media, cabello oscuro, ojos marrón/avellana profundo. Contraste alto.",
     "comments": "Intensidad y magnetismo. Tus rasgos destacan con colores profundos y saturados que aportan misterio y fuerza.",
-    "recommended_colors": "Cálidos oscuros y saturados (vino cálido, terracota, verde bosque)",
-    "avoid_colors": "Claros y fríos",
+    "recommended_colors": "Tonos oscuros y saturados con calidez: vino cálido, burdeos tostado, verde bosque, marrón chocolate, cobre oscuro. Intensidad y magnetismo.",
+    "avoid_colors": "Tonos claros o fríos (lavandas, rosas bebé).",
     "recommended_products": [
       {
-        "name": "Dream Paint Blush Chelsea",
-        "id": "48645963579729"
+        "id": "005D40A3901",
+        "name": "Dream Paint Blush Chelsea"
       },
       {
-        "name": "Lip Bloom Barbados",
-        "id": "48645978587473"
+        "id": "003AF4B5501",
+        "name": "Lip Bloom Oil & Tint Barbados"
       },
       {
-        "name": "Lip Grace Mystique Girl",
-        "id": "48645996151121"
+        "id": "006FF6E7801",
+        "name": "Dream Paint Bronzer Sugar Cane"
+      },
+      {
+        "id": "001B5494E01",
+        "name": "Lip Grace Kalahari"
       }
     ],
     "swatches": [
-      "\"#654321\"",
-      "\"#993300\"",
-      "\"#556B2F\"",
-      "\"#8B0000\"",
-      "\"#483C32\""
-    ]
+      "#8B0000",
+      "#654321",
+      "#556B2F",
+      "#993300",
+      "#483C32"
+    ],
+    "palette_description": "vino cálido, marrón oscuro, verde bosque, óxido oscuro, bronce envejecido"
   },
   "Invierno Brillante": {
     "description": "Piel clara fría, cabello oscuro, ojos claros intensos. Contraste máximo.",
-    "comments": "Alto contraste, mirada poderosa. Tu piel brilla con tonos joya que hacen que todo se vea más nítido, fresco y audaz.",
-    "recommended_colors": "Tonos joya saturados (fucsia, turquesa, rojo puro)",
-    "avoid_colors": "Apagados, terrosos",
+    "comments": "Alto contraste, mirada poderosa. Tu piel se realza con tonos joya fríos que que irradian fuerza y frescura.",
+    "recommended_colors": "Tonos joya fríos y saturados: fucsia, turquesa, rojo puro, azul zafiro, verde esmeralda fría. Contraste alto y presencia vibrante.",
+    "avoid_colors": "Tonos apagados o terrosos (camel, beige, oliva).",
     "recommended_products": [
       {
-        "name": "Lip Bloom Ruby Vice",
-        "id": "48645978620241"
+        "id": "004AF4C761",
+        "name": "Flush & Bloom Stick Blush"
       },
       {
-        "name": "Lip Grace Mystique Girl",
-        "id": "48645996151121"
+        "id": "00384555701",
+        "name": "Lip Bloom Oil & Tint Ruby Vice"
       },
       {
-        "name": "Dream Paint Blush Chelsea",
-        "id": "48645963579729"
+        "id": "001BF122001",
+        "name": "Lip Grace Mystique Girl"
+      },
+      {
+        "id": "006FF6E7801",
+        "name": "Dream Paint Blush Chelsea"
       }
     ],
     "swatches": [
-      "\"#0000CD\"",
-      "\"#8A2BE2\"",
-      "\"#DC143C\"",
-      "\"#00BFFF\"",
-      "\"#C71585\""
-    ]
+      "#DC143C",
+      "#40E0D0",
+      "#8A2BE2",
+      "#0000CD",
+      "#00CED1"
+    ],
+    "palette_description": "rojo carmín, turquesa, violeta intenso, azul cobalto, verde agua fría"
   },
   "Invierno Frío": {
     "description": "Piel fría neutra, cabello oscuro, ojos claros brillantes. Contraste alto.",
-    "comments": "Belleza pura y definida. Los tonos fríos intensos te dan presencia elegante y sofisticada, con la fuerza justa.",
-    "recommended_colors": "Fríos intensos (rojo frío, azul marino, frambuesa)",
-    "avoid_colors": "Cálidos naranjas, dorados",
+    "comments": "Belleza definida. Te favorecen los tonos fríos puros de contraste medio-alto que aportan elegancia y sofisticación, con fuerza equilibrada.",
+    "recommended_colors": "Tonos fríos y profundos: rojo frío, azul marino, frambuesa, magenta, violeta azulado. Sofisticación elegante.",
+    "avoid_colors": "Dorados, naranjas o marrones cálidos.",
     "recommended_products": [
       {
-        "name": "Lip Grace Twilight Zone",
-        "id": "48645996085585"
+        "id": "0019A495701",
+        "name": "Lip Grace Twilight Zone"
       },
       {
-        "name": "Lip Bloom Ruby Vice",
-        "id": "48645978620241"
+        "id": "00384555701",
+        "name": "Lip Bloom Oil & Tint Ruby Vice"
       },
       {
-        "name": "Dream Paint Blush Chelsea",
-        "id": "48645963579729"
+        "id": "004AF4C761",
+        "name": "Flush & Bloom Stick Blush"
       }
     ],
     "swatches": [
-      "\"#FF1493\"",
-      "\"#00CED1\"",
-      "\"#4169E1\"",
-      "\"#FF0000\"",
-      "\"#FFD700\""
-    ]
+      "#B22222",
+      "#4169E1",
+      "#8B008B",
+      "#4682B4",
+      "#C71585"
+    ],
+    "palette_description": "rojo frío, azul real, magenta profundo, azul acero, frambuesa fría"
   },
   "Invierno Profundo": {
     "description": "Piel fría u oliva profunda, cabello negro/castaño muy oscuro, ojos intensos. Contraste alto.",
-    "comments": "Misterio y contraste. Los colores oscuros, intensos y fríos son tu sello: potentes y magnéticos.",
-    "recommended_colors": "Fríos oscuros (borgoña, ciruela, esmeralda)",
-    "avoid_colors": "Claros, cálidos suaves",
+    "comments": "Misterio y contraste. Los colores oscuros, intensos y fríos son tu sello: potentes, elegantes y magnéticos.",
+    "recommended_colors": "Tonos fríos oscuros y dramáticos: borgoña, ciruela, azul noche, verde esmeralda oscuro, gris antracita. Potencia y contraste alto.",
+    "avoid_colors": "Tonos cálidos suaves o pastel.",
     "recommended_products": [
       {
-        "name": "Lip Bloom Barbados",
-        "id": "48645978587473"
+        "id": "004AF4C761",
+        "name": "Flush & Bloom Stick Blush"
       },
       {
-        "name": "Lip Grace Mystique Girl",
-        "id": "48645996151121"
+        "id": "001BF122001",
+        "name": "Lip Grace Mystique Girl"
       },
       {
-        "name": "Dream Paint Blush Chelsea",
-        "id": "48645963579729"
+        "id": "002B4786201",
+        "name": "Ethereal Luminizer Stardust"
       }
     ],
     "swatches": [
-      "\"#191970\"",
-      "\"#800000\"",
-      "\"#4B0082\"",
-      "\"#2F4F4F\"",
-      "\"#006400"
-    ]
+      "#4B0082",
+      "#191970",
+      "#006400",
+      "#800000",
+      "#2F4F4F"
+    ],
+    "palette_description": "índigo profundo, azul noche, verde oscuro, burdeos, gris carbón"
   }
 }
