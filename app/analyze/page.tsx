@@ -230,19 +230,19 @@ export default function AnalyzePage() {
   return (
   <main className="min-h-screen flex flex-col items-center bg-white text-black px-4 py-4 overflow-y-auto">
     {/* Header */}
-    <header className="w-full flex justify-start px-6 py-2">
-      <img src="/Logos-01.svg" alt="Idony logo" className="w-40 h-auto opacity-90" />
-    </header>
-
-    {/* Title */}
-    <section className="text-center px-6 mb-1">
-      <h1 className="text-3xl font-black uppercase tracking-tight text-black">
-        ANÁLISIS DE COLORIMETRÍA
-      </h1>
-      <p className="text-sm font-medium text-black mt-2">
-        DESCUBRE TU PALETA ÚNICA SEGÚN TU TONO DE PIEL, OJOS Y CABELLO.
-      </p>
-    </section>
+    <header className="w-full text-center px-4 py-4">
+  <img
+    src="/Logos-01.svg"
+    alt="Idony logo"
+    className="w-32 sm:w-40 h-auto mx-auto mb-2 opacity-90"
+  />
+  <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-black">
+    ANÁLISIS DE COLORIMETRÍA
+  </h1>
+  <p className="text-sm sm:text-base font-medium text-black mt-2">
+    DESCUBRE TU PALETA ÚNICA SEGÚN TU TONO DE PIEL, OJOS Y CABELLO.
+  </p>
+</header>
 
     {/* Camera + Instructions */}
     <section className="flex flex-col items-center justify-center w-full max-w-md px-4 flex-grow">

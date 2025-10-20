@@ -70,14 +70,16 @@ export default function ResultPage() {
   return (
     <main className="min-h-dvh flex flex-col items-center bg-white text-black px-6 py-4 overflow-y-auto">
       {/* Header */}
-      <header className="relative w-full flex items-center justify-center px-6 py-3">
-        <img
-          src="/Logos-01.svg"
-          alt="Idony logo"
-          className="absolute left-6 top-1/2 -translate-y-1/2 w-36 h-auto"
-        />
-        <h1 className="text-2xl font-black uppercase tracking-tight text-center">{category}</h1>
-      </header>
+      <header className="w-full flex flex-col items-center text-center px-4 py-3 space-y-2 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-3">
+  <img
+    src="/Logos-01.svg"
+    alt="Idony logo"
+    className="w-28 sm:w-36 h-auto opacity-90 mx-auto sm:mx-0"
+  />
+  <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-black mt-1 sm:mt-0">
+    {category}
+  </h1>
+</header>
 
       {/* Main Content */}
       <div className="max-w-5xl w-full text-center text-black space-y-2 leading-tight mt-4">
