@@ -49,17 +49,38 @@ export default function AnalyzePage() {
 }, []);
   // called when the user clicks “Iniciar colorimetría”
   const handleStart = () => {
-    const saved = localStorage.getItem('idony_email');
-    if (!saved) setShowForm(true);
-    else startCamera(); // your existing camera start logic
-  };
+  const localEmail = localStorage.getItem('idony_email');
+  const cookieEmail = document.cookie.match(/idony_email=([^;]+)/)?.[1];
+  const savedEmail = localEmail || cookieEmail;
+
+  console.log('🔎 Saved email found:', savedEmail);
+
+  if (!savedEmail) {
+    setShowForm(true);
+  } else {
+    startCamera();
+  }
+};
 
   const handleFormSuccess = (email: string) => {
-    localStorage.setItem('idony_email', email);
-    if (window.fbq) window.fbq('track', 'Lead', { email });
-    setShowForm(false);
-    startCamera(); // continue to analysis
-  };
+  // 🧠 Store in localStorage + cookie
+  localStorage.setItem('idony_email', email);
+  document.cookie = `idony_email=${email}; path=/; max-age=31536000; SameSite=Lax`;
+
+  // 🎯 Fire Meta Pixel
+  if (typeof window !== 'undefined' && window.fbq) {
+    window.fbq('track', 'Lead', { email });
+  }
+
+  // 🧩 Identify in Klaviyo
+  if (typeof window !== 'undefined' && (window as any)._klOnsite) {
+    (window as any)._klOnsite.push(['identify', { email }]);
+    console.log('🪪 Klaviyo identify pushed');
+  }
+
+  setShowForm(false);
+  startCamera();
+};
 
    // Clean up camera when leaving page
   useEffect(() => {

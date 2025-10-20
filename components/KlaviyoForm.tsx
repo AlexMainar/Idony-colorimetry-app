@@ -56,6 +56,14 @@ export default function KlaviyoForm({ onSuccess }: { onSuccess: (email: string) 
       if (e?.detail?.formId === 'WsaZKJ' && e?.detail?.data?.email) {
         const email = e.detail.data.email as string;
         console.log('📧 Klaviyo form submitted', email);
+        // 🧠 Save locally so we don’t re-prompt users
+    localStorage.setItem('idony_email', email);
+    // 🧩 Identify the user in Klaviyo
+    if (typeof window !== 'undefined' && (window as any)._klOnsite) {
+      (window as any)._klOnsite.push(['identify', { email }]);
+      console.log('🪪 Klaviyo identify pushed');
+    }
+
         if (typeof window !== 'undefined' && (window as any).fbq) {
           (window as any).fbq('track', 'Lead', { email });
           console.log('🎯 Meta Pixel Lead fired');
