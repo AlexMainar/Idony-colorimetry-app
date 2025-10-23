@@ -10,11 +10,12 @@ import {
 } from "@/lib/color";
 import { useAppStore } from "@/lib/store";
 import { loadFaceLandmarker, getSkinPoints } from "@/lib/cv/face";
-import KlaviyoForm from '@/components/KlaviyoForm';
+
 
 declare global {
   interface Window {
     localStream?: MediaStream;
+
   }
 }
 
@@ -32,59 +33,14 @@ export default function AnalyzePage() {
   >("marrones");
 
   const [cabello, setCabello] = useState<
-    "rubio" | "rubio-ceniza" | "castaño" | "negro" | "rojo" | "dorado"
+    "rubio" | "rubio-ceniza" | "castaño" | "negro" | "rojo" | "dorado" | "blanco"
   >("rubio-ceniza");
 
-  const [showForm, setShowForm] = useState(false);
 
+
+  // Clean up camera when leaving page
   useEffect(() => {
-  // Allow ?forceLead=1 to always show the form
-  if (typeof window !== 'undefined') {
-    const u = new URL(window.location.href);
-    if (u.searchParams.get('forceLead') === '1') {
-      localStorage.removeItem('idony_email');
-      setShowForm(true);
-    }
-  }
-}, []);
-  // called when the user clicks “Iniciar colorimetría”
-  const handleStart = () => {
-  const localEmail = localStorage.getItem('idony_email');
-  const cookieEmail = document.cookie.match(/idony_email=([^;]+)/)?.[1];
-  const savedEmail = localEmail || cookieEmail;
-
-  console.log('🔎 Saved email found:', savedEmail);
-
-  if (!savedEmail) {
-    setShowForm(true);
-  } else {
-    startCamera();
-  }
-};
-
-  const handleFormSuccess = (email: string) => {
-  // 🧠 Store in localStorage + cookie
-  localStorage.setItem('idony_email', email);
-  document.cookie = `idony_email=${email}; path=/; max-age=31536000; SameSite=Lax`;
-
-  // 🎯 Fire Meta Pixel
-  if (typeof window !== 'undefined' && window.fbq) {
-    window.fbq('track', 'Lead', { email });
-  }
-
-  // 🧩 Identify in Klaviyo
-  if (typeof window !== 'undefined' && (window as any)._klOnsite) {
-    (window as any)._klOnsite.push(['identify', { email }]);
-    console.log('🪪 Klaviyo identify pushed');
-  }
-
-  setShowForm(false);
-  startCamera();
-};
-
-   // Clean up camera when leaving page
-  useEffect(() => {
-     console.log('🧱 AnalyzePage mounted');
+    console.log('🧱 AnalyzePage mounted');
     return () => {
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
@@ -95,7 +51,7 @@ export default function AnalyzePage() {
       if (window.localStream) {
         try {
           window.localStream.getTracks().forEach((t) => t.stop());
-        } catch {}
+        } catch { }
         window.localStream = undefined;
       }
 
@@ -104,7 +60,7 @@ export default function AnalyzePage() {
     };
   }, []);
 
-   // ----------------------------
+  // ----------------------------
   // Start camera
   // ----------------------------
   const startCamera = async () => {
@@ -249,116 +205,103 @@ export default function AnalyzePage() {
   }
   // ✅ UI
   return (
-  <main className="min-h-screen flex flex-col items-center bg-white text-black px-4 py-4 overflow-y-auto">
-    {/* Header */}
-    <header className="w-full text-center px-4 py-4">
-  <img
-    src="/Logos-01.svg"
-    alt="Idony logo"
-    className="w-32 sm:w-40 h-auto mx-auto mb-2 opacity-90"
-  />
-  <h1 className="text-2xl sm:text-3xl font-black uppercase tracking-tight text-black">
-    ANÁLISIS DE COLORIMETRÍA
-  </h1>
-  <p className="text-sm sm:text-base font-medium text-black mt-2">
-    DESCUBRE TU PALETA ÚNICA SEGÚN TU TONO DE PIEL, OJOS Y CABELLO.
-  </p>
-</header>
-
-    {/* Camera + Instructions */}
-    <section className="flex flex-col items-center justify-center w-full max-w-md px-4 flex-grow">
-      <div className="relative overflow-hidden bg-black border border-neutral-400 shadow-sm w-[90vw] max-w-[360px] aspect-square flex items-center justify-center">
-        <canvas
-          ref={canvasRef}
-          className="absolute top-0 left-0 w-full h-full z-[50] pointer-events-none"
-          style={{ mixBlendMode: "screen" }}
+    <main className="min-h-screen flex flex-col items-center bg-white text-black px-4 py-4 overflow-y-auto">
+      {/* Header */}
+      <header className="w-full px-6 pt-6 pb-3 sm:px-12 sm:pt-8 sm:pb-4 flex flex-col items-center sm:flex sm:flex-col sm:items-center sm:justify-center text-center">
+        <img
+          src="/Logos-01.svg"
+          alt="Idony logo"
+          className="w-28 sm:w-32 h-auto mb-3 sm:mb-4 opacity-90 sm:self-start sm:ml-12"
         />
-        <video
-          ref={videoRef}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${
-            cameraActive ? "opacity-100" : "opacity-0"
-          }`}
-          playsInline
-          muted
-          autoPlay
-        />
-        {!cameraActive && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4 px-6">
-            <p className="text-base text-neutral-100 font-semibold">
-              Pulsa el botón para activar la cámara
-            </p>
-
-            {/* ✅ Instructions inside camera box */}
-            <div className="text-sm text-neutral-300 leading-snug space-y-2 mt-2">
-              <p>📸 Asegúrate de tener buena iluminación natural.</p>
-              <p>💡 Evita luces amarillas o focos detrás de ti.</p>
-              <p>🙆‍♀️ Colócate centrada/o frente a la cámara.</p>
-            </div>
-
-            <button
-              onClick={handleStart}
-              className="bg-white text-black font-black uppercase tracking-wide rounded-none py-2 px-6 border border-black hover:bg-black hover:text-white transition-colors mt-4"
-            >
-              EMPEZAR COLORIMETRÍA
-            </button>
-          </div>
-        )}
-      </div>
-
-      {/* Inputs and Capture */}
-      <div className="mt-4 w-full space-y-2 max-w-[360px]">
-        <label className="block text-xs font-black uppercase text-black">COLOR DE OJOS</label>
-        <select
-          value={ojos}
-          onChange={(e) => setOjos(e.target.value as any)}
-          className="w-full rounded-none border border-neutral-400 px-3 py-2 text-black focus:ring-2 focus:ring-black focus:outline-none"
-        >
-          <option value="azules">Azules</option>
-          <option value="grises">Grises</option>
-          <option value="verdes">Verdes</option>
-          <option value="avellana">Avellana</option>
-          <option value="marrones">Marrones</option>
-          <option value="negros">Negros</option>
-        </select>
-
-        <label className="block text-xs font-black uppercase text-black">COLOR DE CABELLO</label>
-        <select
-          value={cabello}
-          onChange={(e) => setCabello(e.target.value as any)}
-          className="w-full rounded-none border border-neutral-400 px-3 py-2 text-black focus:ring-2 focus:ring-black focus:outline-none"
-        >
-          <option value="rubio">Rubio</option>
-          <option value="rubio-ceniza">Rubio ceniza</option>
-          <option value="castaño">Castaño</option>
-          <option value="negro">Negro</option>
-          <option value="rojo">Rojo</option>
-          <option value="dorado">Dorado</option>
-        </select>
-
-        {/* ✅ CTA inside viewport */}
-        <button
-          onClick={capture}
-          disabled={!ready}
-          className="w-full mt-3 bg-white border border-black text-black font-black uppercase tracking-wide rounded-none py-3 hover:bg-black hover:text-white transition-colors"
-        >
-          {ready ? "ANALIZAR MI COLORIMETRÍA" : "INICIANDO CÁMARA..."}
-        </button>
-        {/* ✅ Reuse your existing KlaviyoForm component */}
-      {showForm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-white rounded-md p-6 w-full max-w-md relative">
-            <button
-              onClick={() => setShowForm(false)}
-              className="absolute top-2 right-3 text-black text-lg font-bold"
-            >
-              ×
-            </button>
-            <KlaviyoForm onSuccess={handleFormSuccess} />
-          </div>
+        <div className="mt-2 sm:mt-8 flex flex-col items-center text-center sm:mx-auto sm:max-w-[800px]">
+          <h1 className="text-lg sm:text-xl font-black uppercase tracking-tight text-black leading-tight text-center">
+            ANÁLISIS DE COLORIMETRÍA
+          </h1>
+          <p className="text-[11px] sm:text-sm font-medium text-black mt-1 leading-snug max-w-[90%] sm:max-w-[840px] mx-auto text-center">
+            DESCUBRE TU PALETA ÚNICA SEGÚN TU TONO DE PIEL, OJOS Y CABELLO.
+          </p>
         </div>
-      )}
-      </div>
-    </section>
-  </main>
-);
+      </header>
+
+      {/* Camera + Instructions */}
+      <section className="flex flex-col items-center justify-center w-full max-w-md px-4 flex-grow">
+        <div className="relative overflow-hidden bg-black border border-neutral-400 shadow-sm w-[90vw] max-w-[360px] aspect-square flex items-center justify-center">
+          <canvas
+            ref={canvasRef}
+            className="absolute top-0 left-0 w-full h-full z-[50] pointer-events-none"
+            style={{ mixBlendMode: "screen" }}
+          />
+          <video
+            ref={videoRef}
+            className={`w-full h-full object-cover transition-opacity duration-300 ${cameraActive ? "opacity-100" : "opacity-0"
+              }`}
+            playsInline
+            muted
+            autoPlay
+          />
+          {!cameraActive && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4 px-6">
+              <p className="text-base text-neutral-100 font-semibold">
+                Pulsa el botón para activar la cámara
+              </p>
+
+              {/* ✅ Instructions inside camera box */}
+              <div className="text-sm text-neutral-300 leading-snug space-y-2 mt-2">
+                <p>📸 Asegúrate de tener buena iluminación natural.</p>
+                <p>💡 Evita luces amarillas o focos detrás de ti.</p>
+                <p>🙆‍♀️ Colócate centrada/o frente a la cámara.</p>
+              </div>
+
+              <button
+                onClick={startCamera}
+                className="bg-white text-black font-black uppercase tracking-wide rounded-none py-2 px-6 border border-black hover:bg-black hover:text-white transition-colors mt-4"
+              >
+                EMPEZAR COLORIMETRÍA
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* Inputs and Capture */}
+        <div className="mt-3 w-full space-y-1.5 max-w-[340px]">
+          <label className="block text-[10px] font-black uppercase text-black">COLOR DE OJOS</label>
+          <select
+            value={ojos}
+            onChange={(e) => setOjos(e.target.value as any)}
+            className="w-full rounded-none border border-neutral-400 px-2 py-1.5 text-sm text-black focus:ring-1 focus:ring-black focus:outline-none"
+          >
+            <option value="azules">Azules</option>
+            <option value="grises">Grises</option>
+            <option value="verdes">Verdes</option>
+            <option value="avellana">Avellana</option>
+            <option value="marrones">Marrones</option>
+            <option value="negros">Negros</option>
+          </select>
+
+          <label className="block text-[10px] font-black uppercase text-black">COLOR DE CABELLO</label>
+          <select
+            value={cabello}
+            onChange={(e) => setCabello(e.target.value as any)}
+            className="w-full rounded-none border border-neutral-400 px-2 py-1.5 text-sm text-black focus:ring-1 focus:ring-black focus:outline-none"
+          >
+            <option value="rubio">Rubio</option>
+            <option value="rubio-ceniza">Rubio ceniza</option>
+            <option value="castaño">Castaño</option>
+            <option value="negro">Negro</option>
+            <option value="rojo">Rojo</option>
+            <option value="blanco">Blanco</option>
+            <option value="dorado">Dorado</option>
+          </select>
+          {/* ✅ CTA inside viewport */}
+          <button
+            onClick={capture}
+            disabled={!ready}
+            className="w-full mt-2 bg-white border border-black text-black font-black uppercase tracking-wide rounded-none py-2 text-sm hover:bg-black hover:text-white transition-colors"
+          >
+            {ready ? "ANALIZAR MI COLORIMETRÍA" : "INICIANDO CÁMARA..."}
+          </button>
+        </div>
+      </section>
+    </main>
+  );
 }

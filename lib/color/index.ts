@@ -88,7 +88,7 @@ export function classifyCategoryFromSkinRGB(
 // ---------------------
 
 export type ColorOjos = "azules" | "grises" | "verdes" | "avellana" | "marrones" | "negros";
-export type ColorCabello = "rubio" | "rubio-ceniza" | "castaño" | "negro" | "rojo" | "dorado";
+export type ColorCabello = "rubio" | "rubio-ceniza" | "castaño" | "negro" | "rojo" | "blanco" |"dorado";
 
 export function familiaDesdeCategoria(cat: string): "Primavera" | "Verano" | "Otoño" | "Invierno" {
   if (cat.startsWith("Primavera")) return "Primavera";
@@ -161,7 +161,7 @@ export function refinarCategoria(catPiel: string, ojos: ColorOjos, cabello: Colo
 
   // Hair → chroma
   let chroma: "Bright" | "Soft" = "Soft";
-  if (["rubio", "dorado", "rojo"].includes(cabello)) chroma = "Bright";
+  if (["rubio", "dorado", "rojo", "blanco"].includes(cabello)) chroma = "Bright";
   else if (["rubio-ceniza", "castaño", "negro"].includes(cabello)) chroma = "Soft";
   console.log("Chroma from hair:", cabello, "=>", chroma);
 

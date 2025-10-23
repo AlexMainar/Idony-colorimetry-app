@@ -1,131 +1,105 @@
-'use client';
-import { useEffect, useRef, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 
-export default function KlaviyoForm({ onSuccess }: { onSuccess: (email: string) => void }) {
-  const [showFallback, setShowFallback] = useState(false);
-  const fallbackEmailRef = useRef<HTMLInputElement>(null);
+interface KlaviyoFormProps {
+  onSuccess?: (email: string) => void;
+}
+
+export default function KlaviyoForm({ onSuccess }: KlaviyoFormProps) {
+  const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
 
   useEffect(() => {
-    console.log('🧱 <KlaviyoForm/> mounted');
-    const init = () => {
-      const ensureScript = () => {
-        if (!document.querySelector('script[src*="klaviyo.com/onsite/js/klaviyo.js"]')) {
-          const s = document.createElement('script');
-          s.src = 'https://static.klaviyo.com/onsite/js/klaviyo.js?company_id=WsaZKJ';
-          s.async = true;
-          s.onload = () => {
-            console.log('✅ Klaviyo script loaded');
-            kickRender();
-          };
-          document.body.appendChild(s);
-        } else {
-          console.log('⚡ Klaviyo script already present');
-          kickRender();
-        }
-      };
-
-      const kickRender = () => {
-        // give React time to paint the container div, then ask Klaviyo to render
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            try {
-              (window as any)._klOnsite = (window as any)._klOnsite || [];
-              // Works for popup; also nudges embed scanning on recent versions
-              (window as any)._klOnsite.push(['openForm', 'WsaZKJ']);
-            } catch (e) {
-              console.warn('Klaviyo openForm error', e);
-            }
-          });
-        });
-
-        // if no form markup appears within 1.5s, show fallback
-        setTimeout(() => {
-          const hasInjected = document.querySelector('.klaviyo-form-WsaZKJ form, .klaviyo-form-WsaZKJ input, .klaviyo-form-WsaZKJ [data-testid]');
-          if (!hasInjected) {
-            console.warn('⏳ Klaviyo did not inject UI in time — showing fallback form');
-            setShowFallback(true);
-          }
-        }, 1500);
-      };
-
-      ensureScript();
-    };
-
-    const onSubmit = (e: any) => {
-      // Klaviyo native event
-      if (e?.detail?.formId === 'WsaZKJ' && e?.detail?.data?.email) {
-        const email = e.detail.data.email as string;
-        console.log('📧 Klaviyo form submitted', email);
-        // 🧠 Save locally so we don’t re-prompt users
-    localStorage.setItem('idony_email', email);
-    // 🧩 Identify the user in Klaviyo
-    if (typeof window !== 'undefined' && (window as any)._klOnsite) {
-      (window as any)._klOnsite.push(['identify', { email }]);
-      console.log('🪪 Klaviyo identify pushed');
+    // ✅ Initialize Klaviyo API if available
+    if (typeof window !== "undefined" && window.klaviyo) {
+      console.log("🧩 Klaviyo API available — ready to track events");
+    } else {
+      console.warn("⚠️ Klaviyo API not detected — ensure klaviyo.js is loaded in layout.tsx");
     }
+  }, []);
+  // 🧠 Skip form if user already subscribed
+  useEffect(() => {
+    const savedEmail =
+      localStorage.getItem("idony_email") ||
+      document.cookie.split("; ").find((r) => r.startsWith("idony_email="))?.split("=")[1];
 
-        if (typeof window !== 'undefined' && (window as any).fbq) {
-          (window as any).fbq('track', 'Lead', { email });
-          console.log('🎯 Meta Pixel Lead fired');
-        }
-        onSuccess(email);
-      }
-    };
-
-    document.addEventListener('klaviyoFormsSubmit', onSubmit);
-    // small delay ensures this runs post-hydration
-    const t = setTimeout(init, 200);
-
-    return () => {
-      clearTimeout(t);
-      document.removeEventListener('klaviyoFormsSubmit', onSubmit);
-    };
+    if (savedEmail) {
+      console.log("📧 Existing user detected:", savedEmail);
+      onSuccess?.(savedEmail);
+    }
   }, [onSuccess]);
 
-  // Fallback submit (stores email + fires pixel + continues), so users never get blocked
-  const handleFallbackSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const email = fallbackEmailRef.current?.value?.trim();
+  // 🔘 Called when the user submits their email (for testing / manual trigger)
+  const handleSubmit = async (email: string) => {
     if (!email) return;
     try {
-      if (typeof window !== 'undefined' && (window as any).fbq) {
-        (window as any).fbq('track', 'Lead', { email });
-        console.log('🎯 Meta Pixel Lead fired (fallback)');
+
+      await fetch("/api/klaviyo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, consent }),
+      });
+      // Trigger Meta Pixel
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("track", "Lead", { email });
       }
-      onSuccess(email);
+
+      if (typeof window !== "undefined") {
+        localStorage.setItem("klaviyo_email", email);
+        document.cookie = `klaviyo_email=${encodeURIComponent(email)}; path=/; max-age=31536000`;
+      }
+      onSuccess?.(email);
+      console.log("✅ KlaviyoForm success event dispatched");
     } catch (err) {
-      console.error('Fallback lead error:', err);
-      onSuccess(email || '');
+      console.error("❌ Error sending event to Klaviyo:", err);
+    }
+    if (typeof window !== "undefined") {
+      localStorage.setItem("idony_email", email);
+      document.cookie = `idony_email=${encodeURIComponent(email)}; path=/; max-age=31536000; SameSite=Lax`;
     }
   };
-
   return (
-    <div className="w-full max-w-md mx-auto">
-      {/* Klaviyo embed target */}
-      <div className="klaviyo-form-WsaZKJ" />
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        const input = document.getElementById("klaviyo-email") as HTMLInputElement;
+        if (input?.value) handleSubmit(input.value);
+      }}
+      className="w-full max-w-lg mx-auto flex flex-col items-center bg-white p-6 space-y-4 border border-gray-200"
+    >
+      {/* Email input */}
+      <input
+        type="email"
+        id="klaviyo-email"
+        placeholder="Email"
+        required
+        className="w-full border border-[#B4BBC3] focus:border-black px-3 py-3 text-[16px] font-normal text-black placeholder-[#767676] outline-none h-[50px]"
+      />
 
-      {/* Fallback (only shows if Klaviyo fails to render) */}
-      {showFallback && (
-        <form onSubmit={handleFallbackSubmit} className="mt-2 space-y-3">
-          <label className="block text-xs font-black uppercase text-black">Tu email</label>
-          <input
-            ref={fallbackEmailRef}
-            type="email"
-            required
-            placeholder="tucorreo@ejemplo.com"
-            className="w-full rounded-none border border-neutral-400 px-3 py-2 text-black focus:ring-2 focus:ring-black focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="w-full bg-black text-white font-black uppercase tracking-wide rounded-none py-2 hover:opacity-90"
-          >
-            Descubrir mi paleta
-          </button>
-          <p className="text-xs text-neutral-500">
-            (Klaviyo no se ha cargado — usando formulario directo temporal para no bloquear la experiencia)
-          </p>
-        </form>
-      )}
-    </div>
+      {/* Checkbox */}
+      <label className="flex items-center space-x-2 w-full text-sm text-black">
+        <input type="checkbox" id="klaviyo-consent" className="accent-[#D84139]" defaultChecked />
+        <span>Sí, quiero recibir novedades y ofertas exclusivas de Idony.</span>
+      </label>
+
+      {/* Submit button */}
+
+      <button
+        type="submit"
+        className="w-full bg-[#D84139] text-white font-bold uppercase py-3 tracking-wide hover:bg-[#b9372e] transition"
+      >
+        Descubre tu paleta
+      </button>
+
+      {/* Legal note */}
+      <p className="text-[11px] text-gray-500 text-center leading-tight max-w-md">
+        Al suscribirte aceptas recibir novedades y ofertas exclusivas de Idony por email, conforme a
+        nuestra{" "}
+        <a href="https://idonycosmetics.com/policies/privacy-policy" target="_blank" rel="noopener noreferrer" className="underline text-[#0066CC]">
+          Política de Privacidad
+        </a>
+        . Puedes darte de baja en cualquier momento.
+      </p>
+    </form>
   );
 }
