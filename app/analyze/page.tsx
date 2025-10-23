@@ -10,7 +10,7 @@ import {
 } from "@/lib/color";
 import { useAppStore } from "@/lib/store";
 import { loadFaceLandmarker, getSkinPoints } from "@/lib/cv/face";
-
+import { normalizeLighting } from "@/lib/color";
 
 declare global {
   interface Window {
@@ -189,7 +189,19 @@ export default function AnalyzePage() {
       (leftRgb[2] + rightRgb[2] + foreheadRgb[2] + chinRgb[2]) / 4,
     ];
 
-    const skinSeason = classifyCategoryFromSkinRGB(avg);
+
+    const correctedAvg = normalizeLighting(avg);
+
+    console.log(
+      "🎨 RGB promedio (raw):",
+      avg.map(v => v.toFixed(1)),
+      "➡️ corregido:",
+      correctedAvg.map(v => v.toFixed(1))
+    );
+
+    console.log("🎨 RGB promedio:", avg);
+
+    const skinSeason = classifyCategoryFromSkinRGB(correctedAvg);
     const season = refinarCategoria(skinSeason, ojos, cabello);
     const swatches = paletteForSeason(season);
 

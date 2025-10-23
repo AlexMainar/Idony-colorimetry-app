@@ -3,15 +3,10 @@ import colorimetry from "@/lib/mapping/colorimetry.json";
 
 const toOklab = converter("oklab");
 
-function clamp(v: number) {
-  return Math.max(0, Math.min(255, v));
-}
+
 
 export function averageRgb(pixels: Uint8ClampedArray): [number, number, number] {
-  let r = 0,
-    g = 0,
-    b = 0,
-    n = 0;
+  let r = 0, g = 0, b = 0, n = 0;
   for (let i = 0; i < pixels.length; i += 4) {
     r += pixels[i];
     g += pixels[i + 1];
@@ -19,13 +14,70 @@ export function averageRgb(pixels: Uint8ClampedArray): [number, number, number] 
     n++;
   }
 
-  const avg: [number, number, number] = [r / n, g / n, b / n];
-  return [clamp(avg[0]), clamp(avg[1]), clamp(avg[2])];
+  let avg: [number, number, number] = [r / n, g / n, b / n];
+
+  // ✅ Normalize for exposure (gray-world assumption)
+  const grayMean = (avg[0] + avg[1] + avg[2]) / 3;
+  avg = [
+    Math.min(255, (avg[0] / grayMean) * 128),
+    Math.min(255, (avg[1] / grayMean) * 128),
+    Math.min(255, (avg[2] / grayMean) * 128),
+  ];
+
+  // ✅ Gamma correction
+  const corrected = avg.map(v => Math.pow(v / 255, 2.2)) as [number, number, number];
+
+  return [
+    Math.max(0, Math.min(255, corrected[0] * 255)),
+    Math.max(0, Math.min(255, corrected[1] * 255)),
+    Math.max(0, Math.min(255, corrected[2] * 255)),
+  ];
+}
+
+function clamp(v: number) {
+  return Math.max(0, Math.min(255, v));
 }
 
 /**
- * Clasifica la piel en una de las 12 categorías usando OKLab
+ * Normalize lighting and white balance for skin detection.
+ *  - Removes warm/yellow indoor bias
+ *  - Scales exposure so average brightness ~ midtone
  */
+export function normalizeLighting([r, g, b]: [number, number, number]): [number, number, number] {
+  // Convert to linear light space
+  const lin = [r, g, b].map(v => Math.pow(v / 255, 2.2));
+
+  // Avoid invalid NaNs
+  if (lin.some(v => isNaN(v))) return [r, g, b];
+
+  // Compute brightness (exposure)
+  const brightness = (lin[0] + lin[1] + lin[2]) / 3;
+
+  // White balance adjustments
+  const rgRatio = lin[0] / (lin[1] + 1e-6);
+  const bgRatio = lin[2] / (lin[1] + 1e-6);
+
+  // Fine-tuned correction for iPhone warm bias
+  const redCorr = rgRatio > 1.1 ? 0.9 / rgRatio : 1;
+  const blueCorr = bgRatio < 0.95 ? 1.1 / bgRatio : 1;
+
+  // Exposure normalization (bring average brightness near 0.55)
+  const exposure = 0.55 / Math.max(0.1, brightness);
+
+  // Apply corrections
+  const corrected = [
+    Math.min(1, lin[0] * exposure * redCorr),
+    Math.min(1, lin[1] * exposure),
+    Math.min(1, lin[2] * exposure * blueCorr),
+  ];
+
+  // Convert back to gamma-encoded sRGB
+  const srgb = corrected.map(v => Math.pow(v, 1 / 2.2) * 255);
+
+  // Clamp + ensure valid numbers
+  return srgb.map(v => Math.max(0, Math.min(255, v))) as [number, number, number];
+}
+
 export function classifyCategoryFromSkinRGB(
   [r, g, b]: [number, number, number]
 ):
@@ -41,6 +93,9 @@ export function classifyCategoryFromSkinRGB(
   | "Otoño Suave"
   | "Otoño Cálido"
   | "Otoño Profundo" {
+
+
+
   const lab = toOklab({
     mode: "rgb",
     r: r / 255,
@@ -52,34 +107,51 @@ export function classifyCategoryFromSkinRGB(
   const a = lab.a; // green ↔ red
   const b_ = lab.b; // blue ↔ yellow
   const chroma = Math.sqrt(a * a + b_ * b_);
-
-  // --- Adjusted thresholds ---
-  const NEUTRAL_BAND = 0.04;
-  const WARM_BIAS = b_ > 0.05;
-  const COOL_BIAS = b_ < -0.05;
+  const hueAngle = Math.atan2(b_, a) * (180 / Math.PI); // -180° to +180°
 
   let warmthCategory: "warm" | "cool" | "neutral";
-  if (a > NEUTRAL_BAND || WARM_BIAS) warmthCategory = "warm";
-  else if (a < -NEUTRAL_BAND || COOL_BIAS) warmthCategory = "cool";
+  if (hueAngle > 25 && hueAngle < 135) warmthCategory = "warm";
+  else if (hueAngle < -25 && hueAngle > -135) warmthCategory = "cool";
   else warmthCategory = "neutral";
+
+  // --- Normalized lightness ---
+  const L_norm = Math.min(1, Math.max(0, (L - 0.3) / 0.5)); // scales 0.3–0.8 → 0–1
+
+  // 🧩 DEBUG OUTPUT (safe guard)
+  console.log("🎨 Skin metrics →", {
+    RGB: [r?.toFixed?.(1) ?? "?", g?.toFixed?.(1) ?? "?", b?.toFixed?.(1) ?? "?"],
+    OKLab: {
+      L: typeof L === "number" ? L.toFixed(3) : "?",
+      a: typeof a === "number" ? a.toFixed(3) : "?",
+      b: typeof b_ === "number" ? b_.toFixed(3) : "?",
+    },
+    chroma: typeof chroma === "number" ? chroma.toFixed(3) : "?",
+    hueAngle: typeof hueAngle === "number" ? hueAngle.toFixed(1) : "?",
+    warmthCategory,
+    L_norm: typeof L_norm === "number" ? L_norm.toFixed(3) : "?",
+  });
 
   // --- Classification logic ---
   if (warmthCategory === "warm") {
-    if (L > 0.7 && chroma > 0.13) return "Primavera Brillante";
-    if (L > 0.65 && chroma <= 0.13) return "Primavera Clara";
-    if (L <= 0.65 && chroma > 0.13) return "Primavera Cálida";
+    if (L_norm > 0.75 && chroma > 0.14) return "Primavera Brillante";
+    if (L_norm > 0.6) return "Primavera Clara";
+    if (L_norm > 0.4 && chroma > 0.12) return "Otoño Cálido";
+    if (L_norm < 0.35) return "Otoño Profundo";
     return "Otoño Suave";
   }
 
   if (warmthCategory === "cool") {
-    if (L > 0.7 && chroma > 0.13) return "Invierno Brillante";
-    if (L > 0.65 && chroma <= 0.13) return "Verano Claro";
-    if (L <= 0.65 && chroma > 0.13) return "Invierno Frío";
-    if (L <= 0.65 && chroma <= 0.13) return "Invierno Profundo";
+    if (L_norm > 0.75 && chroma > 0.14) return "Invierno Brillante";
+    if (L_norm > 0.6) return "Verano Claro";
+    if (L_norm > 0.4 && chroma > 0.12) return "Invierno Frío";
+    if (L_norm < 0.35) return "Invierno Profundo";
+    return "Verano Suave";
   }
 
-  // Neutral fallback
-  if (L > 0.65) return "Verano Suave";
+  // ✅ Neutral fallback — no longer biased to Otoño
+  if (L_norm > 0.7) return "Primavera Clara";
+  if (L_norm > 0.55) return "Verano Suave";
+  if (L_norm > 0.4) return "Invierno Frío";
   return "Otoño Suave";
 }
 
@@ -88,7 +160,7 @@ export function classifyCategoryFromSkinRGB(
 // ---------------------
 
 export type ColorOjos = "azules" | "grises" | "verdes" | "avellana" | "marrones" | "negros";
-export type ColorCabello = "rubio" | "rubio-ceniza" | "castaño" | "negro" | "rojo" | "blanco" |"dorado";
+export type ColorCabello = "rubio" | "rubio-ceniza" | "castaño" | "negro" | "rojo" | "blanco" | "dorado";
 
 export function familiaDesdeCategoria(cat: string): "Primavera" | "Verano" | "Otoño" | "Invierno" {
   if (cat.startsWith("Primavera")) return "Primavera";
@@ -133,16 +205,19 @@ export function familiaDesdeCabello(cabello: ColorCabello): "Primavera" | "Veran
 export function familiaFinal(catPiel: string, ojos: ColorOjos, cabello: ColorCabello) {
   const puntajes = { Primavera: 0, Verano: 0, Otoño: 0, Invierno: 0 };
 
-  puntajes[familiaDesdeCategoria(catPiel)] += 0.4;
-  puntajes[familiaDesdeOjos(ojos)] += 0.3;
-  puntajes[familiaDesdeCabello(cabello)] += 0.3;
+  const baseFam = familiaDesdeCategoria(catPiel);
+  const isNeutralSkin = ["Verano Suave", "Otoño Suave"].includes(catPiel);
 
-  let ganador: "Primavera" | "Verano" | "Otoño" | "Invierno" = "Verano";
+  puntajes[baseFam] += 0.5;
+  puntajes[familiaDesdeOjos(ojos)] += isNeutralSkin ? 0.25 : 0.3;
+  puntajes[familiaDesdeCabello(cabello)] += isNeutralSkin ? 0.25 : 0.2;
+
+  let ganador: keyof typeof puntajes = "Verano";
   let max = -1;
-  for (const fam of Object.keys(puntajes) as (keyof typeof puntajes)[]) {
-    if (puntajes[fam] > max) {
-      ganador = fam;
-      max = puntajes[fam];
+  for (const fam in puntajes) {
+    if (puntajes[fam as keyof typeof puntajes] > max) {
+      ganador = fam as keyof typeof puntajes;
+      max = puntajes[ganador];
     }
   }
   return ganador;
