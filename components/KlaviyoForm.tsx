@@ -25,6 +25,11 @@ export default function KlaviyoForm({ onSuccess }: KlaviyoFormProps) {
 
     if (savedEmail) {
       console.log("📧 Existing user detected:", savedEmail);
+      // ✅ NEW: fire ReturningUser pixel
+      if (typeof window !== "undefined" && window.fbq) {
+        window.fbq("trackCustom", "ReturningUser", { email: savedEmail });
+        console.log("📡 Meta Pixel ReturningUser fired");
+      }
       onSuccess?.(savedEmail);
     }
   }, [onSuccess]);
