@@ -268,7 +268,7 @@ export default function AnalyzePage() {
                 onClick={startCamera}
                 className="bg-white text-black font-black uppercase tracking-wide rounded-none py-2 px-6 border border-black hover:bg-black hover:text-white transition-colors mt-4"
               >
-                EMPEZAR COLORIMETRÍA
+                ACTIVAR CÁMARA
               </button>
             </div>
           )}
@@ -310,7 +310,7 @@ export default function AnalyzePage() {
             disabled={!ready}
             className="w-full mt-2 bg-white border border-black text-black font-black uppercase tracking-wide rounded-none py-2 text-sm hover:bg-black hover:text-white transition-colors"
           >
-            {ready ? "ANALIZAR MI COLORIMETRÍA" : "INICIANDO CÁMARA..."}
+            ANALIZAR MI COLORIMETRÍA
           </button>
         </div>
       </section>
