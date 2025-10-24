@@ -212,6 +212,15 @@ export default function AnalyzePage() {
     // 🕐 Short visual pause to let user see red squares
     await new Promise((r) => setTimeout(r, 400));
 
+    // 🚀 Fire Meta Pixel when colorimetry completed
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("trackCustom", "ColorimetryCompleted", {
+        season,
+        eyes: ojos,
+        hair: cabello,
+      });
+      console.log("📡 Meta Pixel ColorimetryCompleted fired");
+}
     // 🚀 Go to result (camera will stop there)
     router.push("/result");
   }
@@ -308,7 +317,7 @@ export default function AnalyzePage() {
           <button
             onClick={capture}
             disabled={!ready}
-            className="w-full mt-2 bg-white border border-black text-black font-black uppercase tracking-wide rounded-none py-2 text-sm hover:bg-black hover:text-white transition-colors"
+            className="w-full mt-2 bg-[#D84139] text-white font-bold uppercase tracking-wide rounded-none py-3 text-sm hover:bg-[#b9372e] transition-all duration-300 ease-in-out"
           >
             ANALIZAR MI COLORIMETRÍA
           </button>
