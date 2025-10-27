@@ -4,8 +4,8 @@ export async function addToKlaviyoList(email: string, consent: boolean = true) {
   const listId = process.env.KLAVIYO_LIST_ID;
 
   console.log("🔑 Klaviyo env check:", {
-    apiKey: !!process.env.KLAVIYO_API_KEY,
-    listId: process.env.KLAVIYO_LIST_ID,
+    apiKey: !!apiKey,
+    listId,
   });
 
   if (!apiKey || !listId) {
@@ -15,6 +15,7 @@ export async function addToKlaviyoList(email: string, consent: boolean = true) {
 
   try {
     // ✅ Step 1: Create or update the profile in Klaviyo
+    console.log("🧩 Creating Klaviyo profile with email:", email);
     const profileResponse = await fetch("https://a.klaviyo.com/api/profiles/", {
       method: "POST",
       headers: {
@@ -74,7 +75,7 @@ export async function addToKlaviyoList(email: string, consent: boolean = true) {
         data: {
           type: "event",
           attributes: {
-            metric: { data: { type: "metric", attributes: { name: "Colorimetry Signup" } } },
+            metric: { data: { type: "metric", attributes: { name: "ColorimetrySignup" } } },
             profile: { data: { type: "profile", attributes: { email } } },
             properties: { source: "Colorimetry App" },
             time: new Date().toISOString(),

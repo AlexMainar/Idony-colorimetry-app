@@ -11,6 +11,8 @@ import {
 import { useAppStore } from "@/lib/store";
 import { loadFaceLandmarker, getSkinPoints } from "@/lib/cv/face";
 import { normalizeLighting } from "@/lib/color";
+import colorimetry from "@/lib/mapping/colorimetry.json"; // make sure this import exists at the top of the file
+
 
 declare global {
   interface Window {
@@ -18,8 +20,6 @@ declare global {
 
   }
 }
-
-
 export default function AnalyzePage() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -36,7 +36,7 @@ export default function AnalyzePage() {
     "rubio" | "rubio-ceniza" | "castaño" | "negro" | "rojo" | "dorado" | "blanco"
   >("rubio-ceniza");
 
-
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Clean up camera when leaving page
   useEffect(() => {
@@ -144,6 +144,8 @@ export default function AnalyzePage() {
   // Capture and analyze
   // ----------------------------
   const capture = async () => {
+    setIsProcessing(true); // show processing screen
+    await new Promise((r) => setTimeout(r, 1000)); // fake delay 2s
     const video = videoRef.current!;
     const visibleCanvas = canvasRef.current!;
     const ctx = visibleCanvas.getContext("2d")!;
@@ -204,6 +206,13 @@ export default function AnalyzePage() {
     const skinSeason = classifyCategoryFromSkinRGB(correctedAvg);
     const season = refinarCategoria(skinSeason, ojos, cabello);
     const swatches = paletteForSeason(season);
+    const info = (colorimetry as any)[season] || {};
+    const products = info?.recommended_products?.map((p: any) => ({
+      title: p.title,
+      handle: p.handle,
+      image: p.image,
+      url: `https://idonycosmetics.com/products/${p.handle}`,
+    })) || [];
 
 
     // 🎯 After computing averages and setting palette
@@ -220,7 +229,10 @@ export default function AnalyzePage() {
         hair: cabello,
       });
       console.log("📡 Meta Pixel ColorimetryCompleted fired");
-}
+      
+    }
+    await new Promise((r) => setTimeout(r, 1000));
+
     // 🚀 Go to result (camera will stop there)
     router.push("/result");
   }
@@ -260,6 +272,12 @@ export default function AnalyzePage() {
             muted
             autoPlay
           />
+          {isProcessing && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-transparent z-[60]">
+              <div className="w-10 h-10 border-4 border-white/40 border-t-white rounded-full animate-spin" />
+              <p className="text-sm font-bold text-white mt-2 drop-shadow">Analizando...</p>
+            </div>
+          )}
           {!cameraActive && (
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center space-y-4 px-6">
               <p className="text-base text-neutral-100 font-semibold">
@@ -323,6 +341,7 @@ export default function AnalyzePage() {
           </button>
         </div>
       </section>
+
     </main>
   );
 }

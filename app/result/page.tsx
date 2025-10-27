@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useEffect, useState } from "react";
 import { useAppStore } from "@/lib/store";
 import colorimetry from "@/lib/mapping/colorimetry.json";
@@ -14,18 +13,30 @@ export default function ResultPage() {
   const palette = useAppStore((s) => s.palette);
   const [products, setProducts] = useState<ShopifyProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [storedEmail, setStoredEmail] = useState<string | null>(null);
+  const [sentCompleted, setSentCompleted] = useState(false);
   const category = palette?.season;
   const info = category ? (colorimetry as any)[category] : null;
+  useEffect(() => {
+    try {
+      const emailLS =
+        localStorage.getItem("idony_email") || localStorage.getItem("klaviyo_email");
+      if (emailLS) setStoredEmail(emailLS);
+    } catch {
+      /* ignore */
+    }
+  }, []);
 
   // If we already have an email (from previous step), immediately show results
   const [showResults, setShowResults] = useState<boolean>(false);
 
   // Initialize showResults based on stored email
-
   useEffect(() => {
     try {
-      const hasEmail = !!localStorage.getItem("idony_email");
-      setShowResults(hasEmail);
+      const emailLS =
+        localStorage.getItem("idony_email") || localStorage.getItem("klaviyo_email");
+      setShowResults(!!emailLS);
+      if (emailLS) setStoredEmail(emailLS);
     } catch {
       setShowResults(false);
     }
@@ -40,6 +51,57 @@ export default function ResultPage() {
       });
     }
   }, [palette]);
+  // Send ColorimetryCompleted to Klaviyo once we have email + results and the user can see results
+  useEffect(() => {
+    if (!showResults) return;
+    if (!palette?.season) return;
+    if (!storedEmail) return;
+    if (sentCompleted) return;
+
+    const infoLocal = (colorimetry as any)[palette.season] || {};
+    const productsLocal =
+      infoLocal?.recommended_products?.map((p: any) => ({
+        title: p.title,
+        handle: p.handle,
+        image: p.image,
+        url: `https://idonycosmetics.com/products/${p.handle}`,
+      })) || [];
+
+    const propertiesData = {
+      season: palette.season,
+      description: infoLocal?.description,
+      comments: infoLocal?.comments,
+      recommended_colors: infoLocal?.recommended_colors,
+      avoid_colors: infoLocal?.avoid_colors,
+      palette: palette.swatches,
+      products: productsLocal,
+    };
+
+    const payload = {
+      email: storedEmail,
+      event: "ColorimetryCompleted",
+      properties: propertiesData,
+    };
+
+    console.log("📤 Sending ColorimetryCompleted to Klaviyo:", payload);
+
+    fetch("/api/klaviyo", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then((res) => {
+        console.log("📩 /api/klaviyo status:", res.status);
+        setSentCompleted(true);
+        return res.text().catch(() => "");
+      })
+      .then((txt) => {
+        if (txt) console.log("🧾 /api/klaviyo body:", txt);
+      })
+      .catch((err) => {
+        console.error("❌ Error sending ColorimetryCompleted:", err);
+      });
+  }, [showResults, storedEmail, palette, sentCompleted]);
 
   if (!palette) {
     return (
@@ -91,11 +153,13 @@ export default function ResultPage() {
         className="absolute top-6 left-1/2 transform -translate-x-1/2 w-24 sm:w-28 h-auto opacity-90 sm:left-8 sm:translate-x-0"
       />
 
+
+
       {/* INLINE OVERLAY (shown until email is provided) */}
       {!showResults && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
           <div className="bg-white rounded-md p-6 w-full max-w-md relative">
-            <KlaviyoForm onSuccess={() => setShowResults(true)} />
+            <KlaviyoForm onSuccess={(email) => { setStoredEmail(email); setShowResults(true); }} />
           </div>
         </div>
 
@@ -104,23 +168,26 @@ export default function ResultPage() {
       {/* RESULTS (hidden until form success) */}
       {showResults && (
         <div className="max-w-4xl mx-auto px-6 pt-20 pb-0 flex flex-col justify-start min-h-screen">
+          <h2 className="text-lg sm:text-xl font-black uppercase tracking-tight leading-snug mb-4 text-center">
+            AQUÍ TIENES TU ESTUDIO PERSONALIZADO
+          </h2>
           {/* TITLE */}
-          <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight leading-snug mb-3">
+          <h2 className="text-xl sm:text-xl font-black uppercase tracking-tight leading-relaxed mb-4">
             {category}
-          </h1>
+          </h2>
 
           {/* BODY */}
-          <p className="text-sm sm:text-base leading-relaxed text-justify">{info.description}</p>
-          <p className="text-sm sm:text-base leading-relaxed mt-1 text-justify">{info.comments}</p>
+          <p className="text-sm sm:text-base leading-snug text-justify">{info.description}</p>
+          <p className="text-sm sm:text-base leading-snug mt-1 text-justify">{info.comments}</p>
 
           <section className="mt-4">
             <h2 className="font-black text-base uppercase mb-1 tracking-tight">Tonos recomendados</h2>
-            <p className="text-sm sm:text-base leading-relaxed text-justify">{info.recommended_colors}</p>
+            <p className="text-sm sm:text-base leading-snug text-justify">{info.recommended_colors}</p>
           </section>
 
           <section className="mt-3">
             <h2 className="font-black text-base uppercase mb-1 tracking-tight">Colores a evitar</h2>
-            <p className="text-sm sm:text-base leading-relaxed text-justify">{info.avoid_colors}</p>
+            <p className="text-sm sm:text-base leading-snug text-justify">{info.avoid_colors}</p>
           </section>
 
           {/* PALETTE */}

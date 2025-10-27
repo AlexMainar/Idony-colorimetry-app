@@ -93,7 +93,7 @@ export default function KlaviyoForm({ onSuccess }: KlaviyoFormProps) {
         type="submit"
         className="w-full bg-[#D84139] text-white font-bold uppercase py-3 tracking-wide hover:bg-[#b9372e] transition"
       >
-        Descubre tu paleta
+        Obtener tus resultados
       </button>
 
       {/* Legal note */}
