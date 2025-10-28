@@ -52,11 +52,9 @@ export default function ResultPage() {
     }
   }, [palette]);
   // Send ColorimetryCompleted to Klaviyo once we have email + results and the user can see results
+  // ✅ Send ColorimetryCompleted event once when results + email are ready
   useEffect(() => {
-    if (!showResults) return;
-    if (!palette?.season) return;
-    if (!storedEmail) return;
-    if (sentCompleted) return;
+    if (!showResults || !palette?.season || !storedEmail || sentCompleted) return;
 
     const infoLocal = (colorimetry as any)[palette.season] || {};
     const productsLocal =
@@ -67,49 +65,39 @@ export default function ResultPage() {
         url: `https://idonycosmetics.com/products/${p.handle}`,
       })) || [];
 
-    const propertiesData = {
-      season: palette.season,
-      description: infoLocal?.description,
-      comments: infoLocal?.comments,
-      recommended_colors: infoLocal?.recommended_colors,
-      avoid_colors: infoLocal?.avoid_colors,
-      palette: palette.swatches,
-      products: productsLocal,
-    };
-
     const payload = {
       email: storedEmail,
       event: "ColorimetryCompleted",
-      properties: propertiesData,
+      properties: {
+        season: palette.season,
+        description: infoLocal?.description,
+        comments: infoLocal?.comments,
+        recommended_colors: infoLocal?.recommended_colors,
+        avoid_colors: infoLocal?.avoid_colors,
+        palette: palette.swatches,
+        products: productsLocal,
+      },
     };
 
-    console.log("📤 Sending ColorimetryCompleted to Klaviyo:", payload);
+    console.log("📤 Sending /api/klaviyo/event:", payload);
 
-    fetch("/api/klaviyo", {
+    fetch("/api/klaviyo/event", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     })
       .then((res) => {
-        console.log("📩 /api/klaviyo status:", res.status);
+        console.log("📩 /api/klaviyo/event status:", res.status);
         setSentCompleted(true);
         return res.text().catch(() => "");
       })
       .then((txt) => {
-        if (txt) console.log("🧾 /api/klaviyo body:", txt);
+        if (txt) console.log("🧾 /api/klaviyo/event response:", txt);
       })
       .catch((err) => {
         console.error("❌ Error sending ColorimetryCompleted:", err);
       });
   }, [showResults, storedEmail, palette, sentCompleted]);
-
-  if (!palette) {
-    return (
-      <main className="min-h-dvh bg-white text-black flex flex-col items-center px-6 pt-8 pb-16 space-y-6">
-        <p className="text-lg text-black">NO SE ENCONTRÓ ANÁLISIS</p>
-      </main>
-    );
-  }
 
   // Stop camera stream when entering result page
   useEffect(() => {

@@ -44,38 +44,23 @@ function clamp(v: number) {
  *  - Scales exposure so average brightness ~ midtone
  */
 export function normalizeLighting([r, g, b]: [number, number, number]): [number, number, number] {
-  // Convert to linear light space
-  const lin = [r, g, b].map(v => Math.pow(v / 255, 2.2));
+  const mean = (r + g + b) / 3;
 
-  // Avoid invalid NaNs
-  if (lin.some(v => isNaN(v))) return [r, g, b];
+  // ✅ If lighting is within a normal range, skip correction
+  if (mean > 35 && mean < 200) {
+    return [r, g, b];
+    const k = 0.2; // gentler than 0.25
+    const target = 128;
+    const adj = (v: number) => Math.max(0, Math.min(255, v + (target - mean) * k));
+    return [adj(r), adj(g), adj(b)] as [number, number, number];
+  }
 
-  // Compute brightness (exposure)
-  const brightness = (lin[0] + lin[1] + lin[2]) / 3;
+  // ✅ Apply mild normalization only for poor lighting
+  const correctionFactor = 0.25;
+  const adjusted = [r, g, b].map(v => v + (128 - mean) * correctionFactor);
 
-  // White balance adjustments
-  const rgRatio = lin[0] / (lin[1] + 1e-6);
-  const bgRatio = lin[2] / (lin[1] + 1e-6);
-
-  // Fine-tuned correction for iPhone warm bias
-  const redCorr = rgRatio > 1.1 ? 0.9 / rgRatio : 1;
-  const blueCorr = bgRatio < 0.95 ? 1.1 / bgRatio : 1;
-
-  // Exposure normalization (bring average brightness near 0.55)
-  const exposure = 0.55 / Math.max(0.1, brightness);
-
-  // Apply corrections
-  const corrected = [
-    Math.min(1, lin[0] * exposure * redCorr),
-    Math.min(1, lin[1] * exposure),
-    Math.min(1, lin[2] * exposure * blueCorr),
-  ];
-
-  // Convert back to gamma-encoded sRGB
-  const srgb = corrected.map(v => Math.pow(v, 1 / 2.2) * 255);
-
-  // Clamp + ensure valid numbers
-  return srgb.map(v => Math.max(0, Math.min(255, v))) as [number, number, number];
+  // Clamp values to 0–255
+  return adjusted.map(v => Math.max(0, Math.min(255, v))) as [number, number, number];
 }
 
 export function classifyCategoryFromSkinRGB(
@@ -109,50 +94,50 @@ export function classifyCategoryFromSkinRGB(
   const chroma = Math.sqrt(a * a + b_ * b_);
   const hueAngle = Math.atan2(b_, a) * (180 / Math.PI); // -180° to +180°
 
-  let warmthCategory: "warm" | "cool" | "neutral";
-  if (hueAngle > 25 && hueAngle < 135) warmthCategory = "warm";
-  else if (hueAngle < -25 && hueAngle > -135) warmthCategory = "cool";
+  // --- Undertone detection (better than hueAngle only) ---
+  let warmthCategory: "warm" | "cool" | "neutral" = "neutral";
+  const rgRatio = r / Math.max(1, g);
+  const rbDiff = r - b;
+
+  // explicit neutral band + olive (g≥r and g≥b with decent brightness)
+  const isOlive = g >= r && g >= b && (r + g + b) / 3 > 60;
+
+  if (rgRatio > 1.12 && rbDiff > 6) warmthCategory = "warm";
+  else if (rgRatio < 0.92 && b > r + 6) warmthCategory = "cool";
+  else if (isOlive) warmthCategory = "warm";
   else warmthCategory = "neutral";
 
-  // --- Normalized lightness ---
-  const L_norm = Math.min(1, Math.max(0, (L - 0.3) / 0.5)); // scales 0.3–0.8 → 0–1
+  // --- Chroma detection (muted vs bright): use RGB variance ---
+  const m = (r + g + b) / 3;
+  const varRGB = ((r - m) ** 2 + (g - m) ** 2 + (b - m) ** 2) / 3;
+  const stdRGB = Math.sqrt(varRGB);
+  // normalize by brightness so dark faces don’t look “muted” by default
+  const chromaNorm = stdRGB / Math.max(1, m);
+  const chromaLevel = chromaNorm < 0.22 ? "soft" : "bright";
 
-  // 🧩 DEBUG OUTPUT (safe guard)
-  console.log("🎨 Skin metrics →", {
-    RGB: [r?.toFixed?.(1) ?? "?", g?.toFixed?.(1) ?? "?", b?.toFixed?.(1) ?? "?"],
-    OKLab: {
-      L: typeof L === "number" ? L.toFixed(3) : "?",
-      a: typeof a === "number" ? a.toFixed(3) : "?",
-      b: typeof b_ === "number" ? b_.toFixed(3) : "?",
-    },
-    chroma: typeof chroma === "number" ? chroma.toFixed(3) : "?",
-    hueAngle: typeof hueAngle === "number" ? hueAngle.toFixed(1) : "?",
-    warmthCategory,
-    L_norm: typeof L_norm === "number" ? L_norm.toFixed(3) : "?",
-  });
+  // --- Depth detection ---
+  const L_norm = Math.min(1, Math.max(0, (L - 0.28) / 0.55)); // 0.25–0.8 normalized
 
-  // --- Classification logic ---
+  // 🧠 Refined classification logic
   if (warmthCategory === "warm") {
-    if (L_norm > 0.75 && chroma > 0.14) return "Primavera Brillante";
-    if (L_norm > 0.6) return "Primavera Clara";
-    if (L_norm > 0.4 && chroma > 0.12) return "Otoño Cálido";
-    if (L_norm < 0.35) return "Otoño Profundo";
-    return "Otoño Suave";
+    if (L_norm < 0.35) return chromaLevel === "bright" ? "Otoño Profundo" : "Otoño Suave";
+    if (L_norm < 0.55) return "Otoño Suave";
+    if (L_norm < 0.7) return "Primavera Cálida";
+    return "Primavera Clara";
   }
 
   if (warmthCategory === "cool") {
-    if (L_norm > 0.75 && chroma > 0.14) return "Invierno Brillante";
-    if (L_norm > 0.6) return "Verano Claro";
-    if (L_norm > 0.4 && chroma > 0.12) return "Invierno Frío";
     if (L_norm < 0.35) return "Invierno Profundo";
-    return "Verano Suave";
+    if (L_norm < 0.55) return "Verano Suave";
+    if (L_norm < 0.7) return "Verano Claro";
+    return "Invierno Brillante";
   }
 
-  // ✅ Neutral fallback — no longer biased to Otoño
-  if (L_norm > 0.7) return "Primavera Clara";
-  if (L_norm > 0.55) return "Verano Suave";
-  if (L_norm > 0.4) return "Invierno Frío";
-  return "Otoño Suave";
+  // Neutral fallback
+  if (L_norm < 0.4) return "Otoño Suave";
+  if (L_norm < 0.6) return "Verano Suave";
+  return "Primavera Clara";
+
 }
 
 // ---------------------

@@ -25,11 +25,6 @@ export default function KlaviyoForm({ onSuccess }: KlaviyoFormProps) {
 
     if (savedEmail) {
       console.log("📧 Existing user detected:", savedEmail);
-      // ✅ NEW: fire ReturningUser pixel
-      if (typeof window !== "undefined" && window.fbq) {
-        window.fbq("trackCustom", "ReturningUser", { email: savedEmail });
-        console.log("📡 Meta Pixel ReturningUser fired");
-      }
       onSuccess?.(savedEmail);
     }
   }, [onSuccess]);
@@ -38,29 +33,26 @@ export default function KlaviyoForm({ onSuccess }: KlaviyoFormProps) {
   const handleSubmit = async (email: string) => {
     if (!email) return;
     try {
-
-      await fetch("/api/klaviyo", {
+      const response = await fetch("/api/klaviyo/profile", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email, consent }),
       });
-      // Trigger Meta Pixel
-      if (typeof window !== "undefined" && window.fbq) {
-        window.fbq("track", "Lead", { email });
+
+      if (!response.ok) {
+        throw new Error(`Server responded with status ${response.status}`);
       }
 
       if (typeof window !== "undefined") {
-        localStorage.setItem("klaviyo_email", email);
-        document.cookie = `klaviyo_email=${encodeURIComponent(email)}; path=/; max-age=31536000`;
+        localStorage.setItem("idony_email", email);
+        document.cookie = `idony_email=${encodeURIComponent(email)}; path=/; max-age=31536000; SameSite=Lax`;
       }
       onSuccess?.(email);
-      console.log("✅ KlaviyoForm success event dispatched");
+      console.log("✅ Backend profile creation succeeded");
     } catch (err) {
-      console.error("❌ Error sending event to Klaviyo:", err);
-    }
-    if (typeof window !== "undefined") {
-      localStorage.setItem("idony_email", email);
-      document.cookie = `idony_email=${encodeURIComponent(email)}; path=/; max-age=31536000; SameSite=Lax`;
+      console.error("❌ Error sending event to backend:", err);
     }
   };
   return (
@@ -68,7 +60,11 @@ export default function KlaviyoForm({ onSuccess }: KlaviyoFormProps) {
       onSubmit={(e) => {
         e.preventDefault();
         const input = document.getElementById("klaviyo-email") as HTMLInputElement;
-        if (input?.value) handleSubmit(input.value);
+        const checkbox = document.getElementById("klaviyo-consent") as HTMLInputElement;
+        if (input?.value) {
+          setConsent(checkbox?.checked || false);
+          handleSubmit(input.value);
+        }
       }}
       className="w-full max-w-lg mx-auto flex flex-col items-center bg-white p-6 space-y-4 border border-gray-200"
     >
