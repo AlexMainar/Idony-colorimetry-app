@@ -32,6 +32,11 @@ export default function KlaviyoForm({ onSuccess }: KlaviyoFormProps) {
   // 🔘 Called when the user submits their email (for testing / manual trigger)
   const handleSubmit = async (email: string) => {
     if (!email) return;
+    // 🔥 Send Meta Pixel "Lead" event
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("track", "Lead", { email });
+      console.log("📡 Meta Pixel Lead event fired");
+    }
     try {
       const response = await fetch("/api/klaviyo/profile", {
         method: "POST",
