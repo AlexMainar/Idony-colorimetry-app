@@ -81,6 +81,16 @@ export default function ResultPage() {
 
     console.log("📤 Sending /api/klaviyo/event:", payload);
 
+    // 🚀 Fire Meta Pixel event for analytics
+    if (typeof window !== "undefined" && window.fbq) {
+      window.fbq("trackCustom", "ColorimetryCompleted", {
+        season: palette.season,
+        description: infoLocal?.description,
+        comments: infoLocal?.comments,
+      });
+      console.log("📡 Meta Pixel ColorimetryCompleted fired");
+    }
+
     fetch("/api/klaviyo/event", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
