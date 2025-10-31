@@ -1,8 +1,8 @@
 {
   "Primavera Brillante": {
-    "description": "Piel clara cálida con ojos brillantes, contraste alto.",
+    "description": "Piel clara o media, subtono cálido o neutro-cálido; ojos verdes claros, avellana luminosos, marrón claro o azul verdoso; cabello rubio dorado a castaño medio cálido; contraste alto.",
     "comments": "Tu piel pide luz y contraste. Los colores vibrantes despiertan tu energía y resaltan el brillo natural de tus ojos.",
-    "recommended_colors": "Tonos luminosos, saturados y cálidos con subtono dorado: corales vivos, rojos amapola, verdes esmeralda, turquesas y amarillos sol radiante. Reflejan energía y vivacidad.",
+    "recommended_colors": "Coral vivo, rojo amapola cálido, turquesa limpio, verde hoja, amarillo sol.",
     "avoid_colors": "Tonos opacos o terrosos que apagan el brillo natural (beiges apagados, marrones fangosos, grises verdosos).",
     "recommended_products": [
       {
@@ -16,21 +16,21 @@
       {
         "id": "005AE446801",
         "name": "Dream Paint Blush Ibiza"
+      },
+      {
+        "id": "006FF6E7801", 
+        "name":"Dream Paint Bronzer Sugar Cane"
       }
     ],
     "swatches": [
-      "#FF6F61",
-      "#FFB347",
-      "#00B894",
-      "#40E0D0",
-      "#FFD54F"
+      "#FF6F61", "#FF8C42", "#00C2A8", "#3CB371", "#FFD84D"
     ],
-    "palette_description": "coral intenso, melocotón dorado, verde esmeralda, turquesa, amarillo sol"
+    "palette_description": "coral intenso, naranja mandarina, turquesa limpio, verde hoja, amarillo sol"
   },
   "Primavera Clara": {
-    "description": "Piel clara cálida, cabello rubio dorado/avellana claro, ojos claros. Contraste bajo.",
+    "description": "Piel clara, subtono cálido o neutro-cálido; ojos marrón claro, avellana claro, verde claro o azul cálido; cabello rubio dorado o castaño claro cálido; contraste bajo.",
     "comments": "Delicadeza luminosa. Tu belleza desprende frescura y se potencia con tonos suaves, cálidos y traslúcidos, como si el sol se reflejara en tu piel.",
-    "recommended_colors": "Tonos cálidos, claros y transparentes: melocotón suave, coral claro, verde agua, amarillo mantequilla, rosa albaricoque. Transmiten frescura y ligereza.",
+    "recommended_colors": "Melocotón, coral claro, aqua pálido, menta suave, amarillo mantequilla.",
     "avoid_colors": "Tonos muy oscuros o fríos (rojos borgoña, negros, azul marino intenso).",
     "recommended_products": [
       {
@@ -51,18 +51,14 @@
       }
     ],
     "swatches": [
-      "#FFDAB9",
-      "#F7A8A4",
-      "#B5EAD7",
-      "#FFF5BA",
-      "#A8E6CF"
+      "#FDB99B", "#FFA07A", "#CDEFF7", "#AEE5D8", "#FFF1B8"
     ],
-    "palette_description": "melocotón claro, rosa coral suave, verde agua, amarillo pastel, menta pálida"
+    "palette_description": "melocotón, coral claro, aqua hielo, menta suave, mantequilla"
   },
   "Primavera Cálida": {
-    "description": "Piel cálida dorada, cabello dorado o cobrizo, ojos verdes/avellana. Contraste medio.",
-    "comments": "Radiante y dorada. Brillas con tonos bañados por el sol: naranjas suaves, terracotas y corales cálidos que parecen respirar verano.",
-    "recommended_colors": "Tonos dorados, cálidos y mediterráneos: naranjas vivos, terracotas soleados, dorado miel, verde oliva cálido, coral tostado.",
+    "description": "Piel clara o media, subtono cálido dorado; ojos marrón medio u oscuro (frecuente), avellana cálido o verde oliva claro; cabello rubio oscuro a castaño medio cálido; contraste medio.",
+    "comments": "Dorado mediterráneo, brillante como un atardecer de primavera. Tus rasgos se potencian con colores radiantes de saturación moderada y subtono cálido.",
+    "recommended_colors": "Naranja cálido, rojo tomate, dorado miel, oliva cálido, verde teal cálido.",
     "avoid_colors": "Tonos fríos azulados que restan calidez.",
     "recommended_products": [
       {
@@ -83,18 +79,14 @@
       }
     ],
     "swatches": [
-      "#FFA07A",
-      "#E49B0F",
-      "#D2691E",
-      "#CD853F",
-      "#FF7F50"
+      "#FF7F2A", "#E24E2A", "#DAA520", "#8A9A5B", "#00A889"
     ],
-    "palette_description": "salmón cálido, dorado miel, terracota tostado, bronce suave, coral anaranjado"
+    "palette_description": "naranja cálido, rojo tomate, dorado miel, oliva cálido, verde teal cálido"
   },
   "Verano Suave": {
-    "description": "Piel fría con matiz rosado/oliva, cabello castaño medio ceniza, ojos verde-grisáceo. Contraste bajo.",
+    "description": "Piel clara o media, subtono neutro-frío (a veces oliva frío); ojos gris, verde grisáceo, avellana frío o azul gris; cabello castaño medio ceniza o rubio oscuro frío; contraste bajo.",
     "comments": "Todo en ti es equilibrio. Tu luz se revela en la sutileza: tonos fríos, empolvados y armoniosos que acarician sin imponerse.",
-    "recommended_colors": "Tonos fríos y apagados, con base gris perla o malva: rosa viejo, lavanda grisáceo, azul pizarra, verde salvia, malva empolvado. Elegancia discreta y etérea.",
+    "recommended_colors": "Rosa empolvado, malva, salvia, azul pizarra, topo frío.",
     "avoid_colors": "Tonos saturados o muy cálidos (naranjas, amarillos fuertes).",
     "recommended_products": [
       {
@@ -108,21 +100,21 @@
       {
         "id": "006FF6E7801",
         "name": "Dream Paint Bronzer Sugar Cane"
+      },
+      {
+        "id": "006FF6E7801",
+        "name": "Dream Paint Blush Chelsea"
       }
     ],
     "swatches": [
-      "#C8A2C8",
-      "#B0C4DE",
-      "#C3B091",
-      "#B38B6D",
-      "#A3989D"
+      "#CFA0B4", "#B2A1C7", "#8DA799", "#7E8AA2", "#B7A29A"
     ],
-    "palette_description": "lila empolvado, azul humo, beige grisáceo, topo rosado, malva gris"
+    "palette_description": "rosa viejo, malva suave, salvia, azul pizarra, topo frío"
   },
   "Verano Claro": {
-    "description": "Piel clara fría, cabello rubio ceniza, ojos claros. Contraste bajo.",
+    "description": "Piel clara, subtono frío o neutro-frío; ojos azul claro, gris claro o verde frío; cabello rubio ceniza o castaño claro frío; contraste bajo.",
     "comments": "Aire etéreo y cristalino. Tu piel se ilumina con tonos claros y fríos que reflejan serenidad: lavandas, rosas y azules helados.",
-    "recommended_colors": "Tonos fríos claros y luminosos con base azul: lavanda clara, rosa pétalo, agua helado, gris perla, azul cielo. Dan un efecto fresco y cristalino.",
+    "recommended_colors": "Piel clara, subtono frío o neutro-frío; ojos azul claro, gris claro o verde frío; cabello rubio ceniza o castaño claro frío; contraste bajo.",
     "avoid_colors": "Tonos oscuros o intensos (negros, burdeos, marrones).",
     "recommended_products": [
       {
@@ -134,23 +126,23 @@
         "name": "Lip Grace Twilight Zone"
       },
       {
+        "id": "005AE446801",
+        "name": "Dream Paint Blush Ibiza Satin"
+      },
+       {
         "id": "002B4786201",
         "name": "Ethereal Luminizer Stardust"
       }
     ],
     "swatches": [
-      "#E6E6FA",
-      "#AFEEEE",
-      "#F8BBD0",
-      "#D1EAF0",
-      "#F0E68C"
+      "#E6E6FA", "#D9E4F5", "#F4C2C2", "#C5C6D0", "#AFEEEE"
     ],
-    "palette_description": "lavanda suave, aqua pálido, rosa pétalo, azul hielo, vainilla fría"
+    "palette_description": "lavanda suave, azul bebé, rosa pétalo, gris perla, aqua frío"
   },
   "Verano Frío": {
     "description": "Piel fría neutra-rosada, cabello rubio ceniza/castaño, ojos azules o grises. Contraste medio.",
-    "comments": "Elegancia serena. Los tonos fríos y medios equilibran tu piel y tu mirada: rosas frambuesa, malvas y lilas que revelan tu calma interior y te aportan un toque refinado.",
-    "recommended_colors": "Tonos fríos y medios con subtono rosado o azulado: frambuesa, ciruela rosada, malva, azul denim claro, rosa cuarzo frío. Refinamiento y equilibrio.",
+    "comments": "Elegancia serena. Tu belleza pide colores fríos, limpios y sofisticados que dan equilibrio y un toque refinado sin esfuerzo.",
+    "recommended_colors": "Frambuesa fría, azul aciano, periwinkle, acero azulado, rosa frío medio.",
     "avoid_colors": "Naranjas, dorados y cálidos intensos.",
     "recommended_products": [
       {
@@ -171,18 +163,14 @@
       }
     ],
     "swatches": [
-      "#C71585",
-      "#9370DB",
-      "#6A5ACD",
-      "#B0C4DE",
-      "#D8BFD8"
+      "#C72C48", "#7B9CCB", "#C3B1E1", "#6F7F9C", "#E2A1C8"
     ],
     "palette_description": "frambuesa, malva frío, lavanda profunda, azul polvo, rosa lila"
   },
   "Otoño Suave": {
-    "description": "Piel cálida apagada, cabello castaño medio, ojos verdes/marrón suaves. Contraste bajo.",
-    "comments": "Cálida y envolvente. Tu belleza brilla con matices suaves, terrosos y naturales: beiges, oliva y cobre claro que te arropan y encienden tu rostro.",
-    "recommended_colors": "Tonos cálidos apagados y envolventes: beige arena, verde oliva suave, terracota mate, marrón miel, rosa melocotón apagado. Natural y acogedor.",
+    "description": "Piel clara o media, subtono cálido u oliva cálido; ojos marrón claro o medio, avellana, verde oliva; cabello castaño claro o medio cálido; contraste bajo.",
+    "comments": "Cálidez natural, con una luz de tonos reconfortantes. Tus rasgos se potencian con colores poco saturados, suaves y envolventes.",
+    "recommended_colors": "Avena, oliva suave, terracota media, rosa té, cobre claro.",
     "avoid_colors": "Tonos fríos brillantes (fucsia, azul hielo, plata).",
     "recommended_products": [
       {
@@ -203,18 +191,14 @@
       }
     ],
     "swatches": [
-      "#C68642",
-      "#BC8F8F",
-      "#8F9779",
-      "#D2B48C",
-      "#B87333"
+      "#CDB599", "#A3A380", "#C77966", "#BFA6A0", "#B87333"
     ],
-    "palette_description": "ámbar tostado, rosa té, verde oliva, beige cálido, cobre claro"
+    "palette_description": "avena, oliva suave, terracota, rosa té, cobre claro"
   },
   "Otoño Cálido": {
-    "description": "Piel cálida dorada, cabello castaño/rojizo, ojos verdes cálidos o avellana.",
-    "comments": "Piel dorada y vibrante. Te favorecen los tonos ricos y especiados que evocan atardeceres cálidos.",
-    "recommended_colors": "Tonos intensos y especiados: mostaza, calabaza, ámbar dorado, verde musgo, terracota rojiza. Inspirados en la luz de otoño.",
+    "description": "Piel media o media-oscura, subtono cálido dorado; ojos marrón medio u oscuro (frecuente), avellana cálido o verde musgo; cabello castaño medio u oscuro cálido o cobrizo; contraste medio.",
+    "comments": "Riqueza especiada y luz dorada. Brillas con tonos ricos y terrosos que evocan hojas secas, fuego lento y atardeceres cálidos.",
+    "recommended_colors": "Mostaza, calabaza, oro tostado, verde musgo, óxido rojizo.",
     "avoid_colors": "Fríos o pasteles pálidos.",
     "recommended_products": [
       {
@@ -228,21 +212,21 @@
       {
         "id": "002B4786201",
         "name": "Ethereal Luminizer Stardust"
+      },
+      {
+        "id": "001B5494E01",
+        "name": "Lip Grace Kalahari"
       }
     ],
     "swatches": [
-      "#FF8C00",
-      "#A0522D",
-      "#C04000",
-      "#CD7F32",
-      "#8B4513"
+     "#D4A017", "#D2691E", "#B8860B", "#556B2F", "#B55239"
     ],
-    "palette_description": "naranja quemado, marrón canela, óxido rojizo, bronce cálido, marrón tierra"
+    "palette_description": "dorado viejo, calabaza, oro tostado, musgo, óxido rojizo"
   },
   "Otoño Profundo": {
-    "description": "Piel oliva o cálida media, cabello oscuro, ojos marrón/avellana profundo. Contraste alto.",
+    "description": "Piel media o profunda, subtono cálido u oliva cálido; ojos marrón oscuro, avellana oscuro o verde profundo; cabello castaño muy oscuro o negro cálido; contraste alto.",
     "comments": "Intensidad y magnetismo. Tus rasgos destacan con colores profundos y saturados que aportan misterio y fuerza.",
-    "recommended_colors": "Tonos oscuros y saturados con calidez: vino cálido, burdeos tostado, verde bosque, marrón chocolate, cobre oscuro. Intensidad y magnetismo.",
+    "recommended_colors": "Oxblood cálido, verde bosque, chocolate, teal oscuro, bronce tostado.",
     "avoid_colors": "Tonos claros o fríos (lavandas, rosas bebé).",
     "recommended_products": [
       {
@@ -263,18 +247,14 @@
       }
     ],
     "swatches": [
-      "#8B0000",
-      "#654321",
-      "#556B2F",
-      "#993300",
-      "#483C32"
+      "#5A2328", "#2F4F2F", "#3B2F2F", "#004B49", "#7C4A21"
     ],
-    "palette_description": "vino cálido, marrón oscuro, verde bosque, óxido oscuro, bronce envejecido"
+    "palette_description": "oxblood, bosque, chocolate, teal oscuro, bronce tostado"
   },
   "Invierno Brillante": {
-    "description": "Piel clara fría, cabello oscuro, ojos claros intensos. Contraste máximo.",
+    "description": "Piel clara o media, subtono frío o neutro-frío; ojos azul brillante, verde frío o marrón muy oscuro; cabello castaño muy oscuro o negro; contraste muy alto.",
     "comments": "Alto contraste, mirada poderosa. Tu piel se realza con tonos joya fríos que que irradian fuerza y frescura.",
-    "recommended_colors": "Tonos joya fríos y saturados: fucsia, turquesa, rojo puro, azul zafiro, verde esmeralda fría. Contraste alto y presencia vibrante.",
+    "recommended_colors": "Fucsia frío, rojo puro frío, cian, cobalto, esmeralda fría.",
     "avoid_colors": "Tonos apagados o terrosos (camel, beige, oliva).",
     "recommended_products": [
       {
@@ -295,18 +275,14 @@
       }
     ],
     "swatches": [
-      "#DC143C",
-      "#40E0D0",
-      "#8A2BE2",
-      "#0000CD",
-      "#00CED1"
+      "#FF0055", "#C40030", "#00C7FF", "#0047AB", "#008F7A"
     ],
-    "palette_description": "rojo carmín, turquesa, violeta intenso, azul cobalto, verde agua fría"
+    "palette_description": "fucsia frío, rojo puro, cian, cobalto, esmeralda fría"
   },
   "Invierno Frío": {
-    "description": "Piel fría neutra, cabello oscuro, ojos claros brillantes. Contraste alto.",
-    "comments": "Belleza definida. Te favorecen los tonos fríos puros de contraste medio-alto que aportan elegancia y sofisticación, con fuerza equilibrada.",
-    "recommended_colors": "Tonos fríos y profundos: rojo frío, azul marino, frambuesa, magenta, violeta azulado. Sofisticación elegante.",
+    "description": "Piel clara o media, subtono frío rosado o neutro-frío; ojos azul, gris o marrón oscuro frío; cabello castaño oscuro o negro frío; contraste alto.",
+    "comments": "Belleza pura y definida. Los tonos fríos intensos te dan presencia elegante y sofisticada, con la fuerza justa.",
+    "recommended_colors": "Azul real, rojo rubí frío, azul hielo, gris carbón, pino frío.",
     "avoid_colors": "Dorados, naranjas o marrones cálidos.",
     "recommended_products": [
       {
@@ -320,21 +296,21 @@
       {
         "id": "004AF4C7601",
         "name": "Flush & Bloom Stick Blush"
+      },
+      {
+        "id": "0002B4786201",
+        "name": "Ethereal Luminizer Stardust"
       }
     ],
     "swatches": [
-      "#B22222",
-      "#4169E1",
-      "#8B008B",
-      "#4682B4",
-      "#C71585"
+      "#0033A0", "#C0003A", "#D8E2F0", "#2F3E46", "#006D77"
     ],
-    "palette_description": "rojo frío, azul real, magenta profundo, azul acero, frambuesa fría"
+    "palette_description": "azul real, rubí frío, azul hielo, gris carbón, pino frío"
   },
   "Invierno Profundo": {
-    "description": "Piel fría u oliva profunda, cabello negro/castaño muy oscuro, ojos intensos. Contraste alto.",
+    "description": "Piel media o profunda, subtono frío u oliva fría; ojos marrón muy oscuro, negro, azul o verde muy oscuros; cabello negro o castaño muy oscuro frío; contraste muy alto.",
     "comments": "Misterio y contraste. Los colores oscuros, intensos y fríos son tu sello: potentes, elegantes y magnéticos.",
-    "recommended_colors": "Tonos fríos oscuros y dramáticos: borgoña, ciruela, azul noche, verde esmeralda oscuro, gris antracita. Potencia y contraste alto.",
+    "recommended_colors": "Borgoña frío, azul medianoche, abeto oscuro, negro carbón, mora fría.",
     "avoid_colors": "Tonos cálidos suaves o pastel.",
     "recommended_products": [
       {
@@ -348,15 +324,15 @@
       {
         "id": "002B4786201",
         "name": "Ethereal Luminizer Stardust"
+      },
+      {
+        "id": "006FF6E7801",
+        "name": "Dream Paint Blush Chelsea"
       }
     ],
     "swatches": [
-      "#4B0082",
-      "#191970",
-      "#006400",
-      "#800000",
-      "#2F4F4F"
+      "#4A0E2E", "#0B1D51", "#003F2D", "#1C1C1C", "#3F2A56"
     ],
-    "palette_description": "índigo profundo, azul noche, verde oscuro, burdeos, gris carbón"
+    "palette_description": "borgoña, medianoche, abeto, negro carbón, mora fría"
   }
 }

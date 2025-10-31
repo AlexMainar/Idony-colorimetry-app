@@ -207,8 +207,15 @@ export default function ResultPage() {
           {/* PRODUCTS */}
           <section className="mt-4">
             <h2 className="font-black text-base uppercase mb-2 tracking-tight">
-              Productos Idony recomendados
+              Potencia tu colorimetría con:
             </h2>
+              <div className="mb-6">
+                <p className="text-[14px] sm:text-[10px] mt-1 uppercase italic leading-tight text-justify-left sm:text-left max-w-[90%] line-clamp-2">
+                <span className="text-black-900">Tu pack personalizado con </span>
+                <span className="text-red-700 font-bold">-20% de descuento</span>
+                </p>
+            </div>
+            
             {loading ? (
               <p className="text-sm text-black">Cargando productos...</p>
             ) : (
