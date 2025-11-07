@@ -163,11 +163,12 @@ export default function AnalyzePage() {
 
     if (!detections.faceLandmarks?.length) {
       alert("No se detectó rostro. Intenta con mejor iluminación.");
+      setIsProcessing(false);
       return;
     }
 
     const landmarks = detections.faceLandmarks[0];
-    const { leftCheek, rightCheek, forehead, chin } = getSkinPoints(landmarks);
+
 
     const sampleAt = (normX: number, normY: number) => {
       const size = 40;
@@ -180,19 +181,39 @@ export default function AnalyzePage() {
       return averageRgb(imgData.data);
     };
 
-    const leftRgb = sampleAt(leftCheek.x, leftCheek.y);
-    const rightRgb = sampleAt(rightCheek.x, rightCheek.y);
-    const foreheadRgb = sampleAt(forehead.x, forehead.y);
-    const chinRgb = sampleAt(chin.x, chin.y);
+    // 🧠 Use extended skin patches for better averaging
+    const skin = getSkinPoints(landmarks);
+
+    const patchRgbs = skin.patches.map(p => sampleAt(p.x, p.y));
+
+    // Compute per-channel arrays
+    const reds = patchRgbs.map(rgb => rgb[0]);
+    const greens = patchRgbs.map(rgb => rgb[1]);
+    const blues = patchRgbs.map(rgb => rgb[2]);
+
+    // Helper to compute trimmed mean (remove top/bottom 20%)
+    const trimmedMean = (arr: number[]) => {
+      const sorted = [...arr].sort((a, b) => a - b);
+      const cut = Math.floor(sorted.length * 0.2);
+      const trimmed = sorted.slice(cut, sorted.length - cut);
+      const sum = trimmed.reduce((s, v) => s + v, 0);
+      return trimmed.length ? sum / trimmed.length : 0;
+    };
 
     const avg: [number, number, number] = [
-      (leftRgb[0] + rightRgb[0] + foreheadRgb[0] + chinRgb[0]) / 4,
-      (leftRgb[1] + rightRgb[1] + foreheadRgb[1] + chinRgb[1]) / 4,
-      (leftRgb[2] + rightRgb[2] + foreheadRgb[2] + chinRgb[2]) / 4,
+      trimmedMean(reds),
+      trimmedMean(greens),
+      trimmedMean(blues),
     ];
 
+    console.log("🎯 RGB patches:", patchRgbs);
+    console.log("🎯 Trimmed mean RGB:", avg.map(v => v.toFixed(1)));
 
     const correctedAvg = normalizeLighting(avg);
+
+    console.log("🧪 Also test raw avg directly:", avg);
+    console.log("🧪 Final input to classifier (correctedAvg):", correctedAvg);
+
 
     console.log(
       "🎨 RGB promedio (raw):",
@@ -203,7 +224,7 @@ export default function AnalyzePage() {
 
     console.log("🎨 RGB promedio:", avg);
 
-    const skinSeason = classifyCategoryFromSkinRGB(correctedAvg);
+    const { label: skinSeason, confidence } = classifyCategoryFromSkinRGB(correctedAvg);
     const season = refinarCategoria(skinSeason, ojos, cabello);
     const swatches = paletteForSeason(season);
     const info = (colorimetry as any)[season] || {};
@@ -216,7 +237,7 @@ export default function AnalyzePage() {
 
 
     // 🎯 After computing averages and setting palette
-    setPalette({ season, swatches });
+    setPalette({ season, swatches, rgb: correctedAvg, skinSeason, confidence });
 
     // 🕐 Short visual pause to let user see red squares
     await new Promise((r) => setTimeout(r, 400));
@@ -227,14 +248,16 @@ export default function AnalyzePage() {
         season,
         eyes: ojos,
         hair: cabello,
+        skinSeasonConfidence: confidence,
       });
       console.log("📡 Meta Pixel ColorimetryCompleted fired");
-      
+
     }
     await new Promise((r) => setTimeout(r, 1000));
 
     // 🚀 Go to result (camera will stop there)
     router.push("/result");
+    setIsProcessing(false);
   }
   // ✅ UI
   return (

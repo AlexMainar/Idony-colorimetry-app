@@ -70,11 +70,14 @@ export default function ResultPage() {
       event: "ColorimetryCompleted",
       properties: {
         season: palette.season,
+        skin_season: palette.skinSeason,
+        skin_season_confidence: palette.confidence ?? null,
         description: infoLocal?.description,
         comments: infoLocal?.comments,
         recommended_colors: infoLocal?.recommended_colors,
         avoid_colors: infoLocal?.avoid_colors,
         palette: palette.swatches,
+        rgb: palette?.rgb || null,
         products: productsLocal,
       },
     };
@@ -85,6 +88,8 @@ export default function ResultPage() {
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("trackCustom", "ColorimetryCompleted", {
         season: palette.season,
+        skinSeason: palette.skinSeason,
+        skinSeasonConfidence: palette.confidence,
         description: infoLocal?.description,
         comments: infoLocal?.comments,
       });

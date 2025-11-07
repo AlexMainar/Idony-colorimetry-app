@@ -4,6 +4,9 @@ import { create } from "zustand";
 export type Palette = {
   season: string;
   swatches: string[];
+  rgb?: [number, number, number];
+  skinSeason?: string;
+  confidence?: number;
 };
 
 type State = {
