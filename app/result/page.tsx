@@ -68,10 +68,10 @@ export default function ResultPage() {
     const payload = {
       email: storedEmail,
       event: "ColorimetryCompleted",
-      properties: {
+      pproperties: {
         season: palette.season,
-        skin_season: palette.skinSeason,
-        skin_season_confidence: palette.confidence ?? null,
+        category: palette?.season || null,
+        confidence: palette?.confidence || null,
         description: infoLocal?.description,
         comments: infoLocal?.comments,
         recommended_colors: infoLocal?.recommended_colors,
@@ -88,8 +88,6 @@ export default function ResultPage() {
     if (typeof window !== "undefined" && window.fbq) {
       window.fbq("trackCustom", "ColorimetryCompleted", {
         season: palette.season,
-        skinSeason: palette.skinSeason,
-        skinSeasonConfidence: palette.confidence,
         description: infoLocal?.description,
         comments: infoLocal?.comments,
       });
